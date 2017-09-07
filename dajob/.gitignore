@@ -15,3 +15,7 @@ buildNumber.properties
 
 ### Java ###
 *.class
+/.classpath
+/.gitignore
+/.settings/
+/target/
