@@ -14,8 +14,17 @@ public class WorkBoard implements java.io.Serializable{
 	private String work_job;
 	private String work_skill;
 	private String work_career;
+	private String work_workplace;
 	private Date work_startdate;
 	private Date work_enddate;
+	
+	public String getWork_workplace() {
+		return work_workplace;
+	}
+	public void setWork_workplace(String work_workplace) {
+		this.work_workplace = work_workplace;
+	}
+  
 	public String getWork_no() {
 		return work_no;
 	}
@@ -76,5 +85,4 @@ public class WorkBoard implements java.io.Serializable{
 	public void setWork_enddate(Date work_enddate) {
 		this.work_enddate = work_enddate;
 	}
-	
 }

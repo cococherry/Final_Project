@@ -80,9 +80,12 @@ public class MemberController {
 		String returnPage = null;
 		
 		if(m.getMember_type_code().equals("U")) {
+			model.addAttribute("certVaules", certService.selectList());
+			model.addAttribute("certList", certService.selectUserCertList(m));
 			model.addAttribute("myinfo", memberService.selectUser(m));
 			returnPage = "member/myinfo";
 		} else if(m.getMember_type_code().equals("C")) {
+			model.addAttribute("comType", memberService.selectCompanyList());
 			model.addAttribute("myinfo", memberService.selectCompany(m));
 			returnPage = "member/myinfo";
 		} else {
@@ -302,7 +305,7 @@ public class MemberController {
 		int maxPage = (int)((double)listCount / limit + 0.9);
 		int startPage = (((int)((double)page / limit + 0.9)) - 1) * limit + 1;
 		int endPage = startPage + limit - 1;
-				
+    
 		if(maxPage < endPage){
 			endPage = maxPage;
 		}

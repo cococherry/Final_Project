@@ -43,6 +43,6 @@
 
 	<delete id="deleteMember" parameterType="string" flushCache="true"
 		statementType="PREPARED" timeout="20">
-		DELETE FROM MEMBER WHERE ID = #{userid}
+		DELETE FROM MEMBER WHERE MEMBER_ID = #{userid}
 	</delete>
 </mapper>

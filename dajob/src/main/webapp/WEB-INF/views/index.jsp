@@ -67,7 +67,7 @@
         <div class="container">
             <div class="row sub_content">
                 <div class="col-lg-12 col-md-12 col-sm-12 wow fadeInDown">
-                    <h1 class="intro text-center">Stylo ! We are Stylo Template</h1>
+                    <h1 class="intro text-center">DA JOB : Direct Find Your Job Place!</h1>
                     <p class="lead text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa nesciunt odit sunt vitae voluptatibus. Ad animi dicta dolore et illo incidunt sint.</p>
                 </div>
                 <div class="rs_box wow bounceInRight" data-wow-offset="200">

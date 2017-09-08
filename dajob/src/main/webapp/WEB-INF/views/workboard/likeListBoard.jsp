@@ -42,7 +42,6 @@ header {
 </head>
 <body>
 	<!--Start Header-->
-	<!--Start Header-->
 	<header>
 		<c:import url="../header.jsp" />
 		<div class="container page_head">
@@ -120,30 +119,34 @@ header {
 											<li class="active"><a>&laquo;</a></li>
 										</c:if>
 										<c:if test="${page > 1 }">
-											<c:url var="blist" value="/blist">
+                      
+										<c:url var="likeList" value="likeCompList.do">
 												<c:param name="page" value="${page - 1 }" />
 											</c:url>
-											<li class="active"><a href="${blist }">&laquo;</a></li>
+											<li class="active"><a href="${likeList }">&laquo;</a></li>
+                    
 										</c:if>
 										<c:forEach var="p" begin="${startPage }" end="${endPage }">
 											<c:if test="${p eq page }">
 												<li><a>${p }</a></li>
 											</c:if>
 											<c:if test="${p ne page }">
-												<c:url var="blist" value="/blist">
+                        
+												<c:url var="likeList" value="likeCompList.do">
 													<c:param name="page" value="${p }" />
 												</c:url>
-												<li><a href="${blist }">${p }</a></li>
+												<li><a href="${likeList }">${p }</a></li>
+                      
 											</c:if>
 										</c:forEach>
 										<c:if test="${page >= maxPage }">
 											<li class="active"><a>&raquo;</a></li>
 										</c:if>
 										<c:if test="${page < maxPage }">
-											<c:url var="blist" value="/blist">
+											<c:url var="likeList" value="likeCompList.do">
 												<c:param name="page" value="${page + 1}" />
 											</c:url>
-											<li class="active"><a href="blist">&raquo;</a></li>
+											<li class="active"><a href="${ likeList }">&raquo;</a></li>
 										</c:if>
 									</ul>
 								</div></div></div></div>

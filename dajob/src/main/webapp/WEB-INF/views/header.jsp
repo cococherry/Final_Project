@@ -53,58 +53,40 @@
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="index.do">Home</a></li>
 
-                    <li><a href="#">공지사항</a></li>
+                    <li><a href="#" id="notice">공지사항</a></li>
 
-                    <li><a href="#">Work Here</a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="about.html">About</a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="about.html">About Us 1</a></li>
-                                    <li><a href="about-2.html">About Us 2</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="services.html">Services</a></li>
-                            <li><a href="faq.html">FAQ</a></li>
-                            <li><a href="sidebar-right.html">Right Sidebar</a></li>
-                            <li><a href="sidebar-left.html">Left Sidebar</a></li>
-                            <li><a href="404-page.html">404 Page</a></li>
+                    <li><a href="#" id="workhere">Work Here</a>
+                    	<ul class="dropdown-menu">
+                            <li><a href="#">직업별 분류</a></li>
+                            <li><a href="#">능력별 분류</a></li>
                         </ul>
                     </li>
-
-                    <li><a href="#">마이페이지</a>
+                    <li><a href="#" id="mypage">마이페이지</a>
                         <ul class="dropdown-menu">
-                            <li>
-                                <a href="portfolio.html">내 정보 수정/탈퇴</a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="portfolio_2.html">Portfolio 2</a></li>
-                                    <li><a href="portfolio_3.html">Portfolio 3</a></li>
-                                    <li><a href="portfolio_4.html">Portfolio 4</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="portfolio_masonry_3.html">내 이력서 조회</a>
+                        <c:if test="${ member.member_type_code == 'U' }" >
+                            <li><a href="myinfo.do">내 정보 수정/탈퇴</a></li>
+                            <li><a href="portfolio_masonry_3.html">내 이력서 조회</a></li>
+                             <li><a href="likeCompList.do">선호 기업 리스트</a></li>
+                            <li><a href="portfolio_single.html">입사 신청 기업 목록</a></li>
+                            <li><a href="portfolio_single.html">내 능력 분석</a></li>
+                            <li><a href="portfolio_single.html">화상 면접 대기실</a></li>
+                            </c:if>
+                   			<c:if test="${ member.member_type_code == 'C' }" >
+                   				<li><a href="myinfo.do">기업 정보 수정/탈퇴</a></li>
+                            <li><a href="portfolio_masonry_3.html">등록한 구인 정보 list</a>
                                 <ul class="dropdown-menu">
                                     <li><a href="portfolio_masonry_2.html">Masonry portfolio 2</a></li>
                                     <li><a href="portfolio_masonry_3.html">Masonry portfolio 3</a></li>
                                     <li><a href="portfolio_masonry_4.html">Masonry portfolio 4</a></li>
                                 </ul>
                             </li>
-                             <li><a href="likeCompList.do">선호 기업 리스트</a></li>
-                            <li><a href="portfolio_single.html">입사 신청 기업 목록</a></li>
-                            <li><a href="portfolio_single.html">내 능력 분석</a></li>
+                            <li><a href="powerlink.do">PowerLink 정보</a></li>
+                            <li><a href="portfolio_single.html">구직 신청자 리스트</a></li>
                             <li><a href="portfolio_single.html">화상 면접 대기실</a></li>
+                   			</c:if>
                         </ul>
                     </li>
-
-                    <li><a href="#">IT정보</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="blog-large-image.html">Large Image</a></li>
-                            <li><a href="blog-medium-image.html">Medium Image</a></li>
-                            <li><a href="blog-post.html">Single Post</a></li>
-                        </ul>
-                    </li>
-
+                    <li><a href="#" id="itinfo">IT정보</a></li>
                     <li><a href="contact.do">Contact</a></li>
                 </ul>
             </div>
@@ -134,21 +116,18 @@
 	        if(currentPath == usePage){
 	        	$(".navbar-nav > li").not($(this)).removeClass('active');
 	        	$(this).addClass('active');
-	        } else if(currentPath.indexOf("item") != -1 
-	        		|| currentPath.indexOf("part") != -1
-	        		|| currentPath.indexOf("design") != -1
-	        		|| currentPath.indexOf("dDetail") != -1 
-	        		|| currentPath.indexOf("pDetail") != -1
-	        		|| currentPath.indexOf("pup") != -1
-	        		|| currentPath.indexOf("dup") != -1){
-                $(".navbar-nav > li").removeClass('active');
-	        	$("li#item").addClass('active');
 	        } else if(currentPath.indexOf("notice") != -1 || currentPath.indexOf("nlist") != -1 || currentPath.indexOf("ndetail") != -1){
                 $(".navbar-nav > li").removeClass('active');
 	        	$("li#notice").addClass('active');
-            } else if (currentPath.indexOf("mypage") != -1 || currentPath.indexOf("order") != -1 || currentPath.indexOf("qlist") != -1  || currentPath.indexOf("qa") != -1 || currentPath.indexOf("qdetail") != -1 || currentPath.indexOf("qmlist") != -1){
-            	$(".navbar-nav > li").removeClass('active');
+            } else if(currentPath.indexOf("workhere") != -1 || currentPath.indexOf("nlist") != -1 || currentPath.indexOf("ndetail") != -1){
+                $(".navbar-nav > li").removeClass('active');
+	        	$("li#workhere").addClass('active');
+            } else if(currentPath.indexOf("mypage") != -1 || currentPath.indexOf("nlist") != -1 || currentPath.indexOf("ndetail") != -1){
+                $(".navbar-nav > li").removeClass('active');
 	        	$("li#mypage").addClass('active');
+            } else if(currentPath.indexOf("itinfo") != -1 || currentPath.indexOf("nlist") != -1 || currentPath.indexOf("ndetail") != -1){
+                $(".navbar-nav > li").removeClass('active');
+	        	$("li#itinfo").addClass('active');
             } else {
             	$(".navbar-nav > li").removeClass('active');
             	$(".navbar-nav > li").eq(0).addClass('active');
