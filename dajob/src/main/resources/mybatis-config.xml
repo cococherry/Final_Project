@@ -14,6 +14,7 @@
 		<typeAlias type="org.kh.dajob.member.model.vo.CompanyType" alias="CompanyType" />
 		<typeAlias type="org.kh.dajob.cert.model.vo.Cert" alias="Cert" />
 		<typeAlias type="org.kh.dajob.cert.model.vo.UserCert" alias="UserCert" />		
+		<typeAlias type="org.kh.dajob.workboard.model.vo.WorkBoard" alias="WorkBoard" />
 	</typeAliases>
 	
 	<!-- <environments default="development">
@@ -33,5 +34,6 @@
 		<mapper resource="mappers/user-mapper.xml" />
 		<mapper resource="mappers/company-mapper.xml" />
 		<mapper resource="mappers/cert-mapper.xml" />
+		<mapper resource="mappers/workboard-mapper.xml" />
 	</mappers>
 </configuration>

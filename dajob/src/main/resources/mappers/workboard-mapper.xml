@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WorkBoard">
+
+	<resultMap id="resultWorkBoard" type="WorkBoard">
+		<id property="work_no" column="WORK_NO" />
+		<result property="work_title" column="WORK_TITLE" />
+		<result property="work_content" column="WORK_CONTENT" />
+		<result property="work_writer" column="WORK_WRITER" />
+		<result property="work_date" column="WORK_DATE" />
+		<result property="work_job" column="WORK_JOB" />
+		<result property="work_skill" column="WORK_SKILL" />
+		<result property="work_career" column="WORK_CAREER" />
+		<result property="work_workplace" column="WORK_WORKPLACE" />
+		<result property="work_startdate" column="WORK_STARTDATE" />
+		<result property="work_enddate" column="WORK_ENDDATE" />
+	</resultMap>
+	
+	
+	<select id="selectList" resultType="arraylist" resultMap="resultWorkBoard">
+		select * from work_board where work_no in (select work_no from LIKELIST where member_id = #{memberId})
+	</select>
+	
+	<select id="getListCount" resultType="int">
+		select count(*) from work_board where work_no in (select work_no from LIKELIST where member_id = #{memberId})
+	</select>
+
+</mapper>

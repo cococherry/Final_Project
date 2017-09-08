@@ -75,7 +75,7 @@
                     <li><a href="#">마이페이지</a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="portfolio.html">Portfolio Classic</a>
+                                <a href="portfolio.html">내 정보 수정/탈퇴</a>
                                 <ul class="dropdown-menu">
                                     <li><a href="portfolio_2.html">Portfolio 2</a></li>
                                     <li><a href="portfolio_3.html">Portfolio 3</a></li>
@@ -83,21 +83,17 @@
                                 </ul>
                             </li>
                             <li>
-                                <a href="portfolio_masonry_3.html">Portfolio Masnory</a>
+                                <a href="portfolio_masonry_3.html">내 이력서 조회</a>
                                 <ul class="dropdown-menu">
                                     <li><a href="portfolio_masonry_2.html">Masonry portfolio 2</a></li>
                                     <li><a href="portfolio_masonry_3.html">Masonry portfolio 3</a></li>
                                     <li><a href="portfolio_masonry_4.html">Masonry portfolio 4</a></li>
                                 </ul>
                             </li>
-                            <li>
-                                <a href="portfolio_single.html">Portfolio Single</a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="portfolio_single.html">Portfolio Single 1</a></li>
-                                    <li><a href="portfolio_single_2.html">Portfolio Single 2</a></li>
-                                    <li><a href="portfolio_single_3.html">Portfolio Single 3</a></li>
-                                </ul>
-                            </li>
+                             <li><a href="likeCompList.do">선호 기업 리스트</a></li>
+                            <li><a href="portfolio_single.html">입사 신청 기업 목록</a></li>
+                            <li><a href="portfolio_single.html">내 능력 분석</a></li>
+                            <li><a href="portfolio_single.html">화상 면접 대기실</a></li>
                         </ul>
                     </li>
 

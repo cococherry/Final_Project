@@ -19,6 +19,10 @@ public class CertDao {
 		return new ArrayList<Cert>(sqlSession.selectList("Cert.selectList"));
 	}
 
+	public ArrayList<UserCert> selectUserCertList(String userid) {
+		return new ArrayList<UserCert>(sqlSession.selectList("Cert.selectUserCert", userid));
+	}
+	
 	public int insertUserCert(Map<String, Object> map) {
 		return sqlSession.insert("Cert.insertUserCert", map);		
 	}

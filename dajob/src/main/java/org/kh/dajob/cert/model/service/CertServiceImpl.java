@@ -6,6 +6,7 @@ import java.util.Map;
 import org.kh.dajob.cert.model.dao.CertDao;
 import org.kh.dajob.cert.model.vo.Cert;
 import org.kh.dajob.cert.model.vo.UserCert;
+import org.kh.dajob.member.model.vo.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,12 @@ public class CertServiceImpl implements CertService {
 	@Override
 	public ArrayList<Cert> selectList() {
 		return certDao.selectList();
+	}
+	
+	@Override
+	public ArrayList<UserCert> selectUserCertList(Member m) {
+		String userid = m.getMember_id();
+		return certDao.selectUserCertList(userid);
 	}
 
 	@Override

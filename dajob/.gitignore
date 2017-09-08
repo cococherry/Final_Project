@@ -21,3 +21,4 @@ buildNumber.properties
 /target/
 
 # References by https://www.gitignore.io/api/java,maven,eclipse
+/.project

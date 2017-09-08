@@ -6,11 +6,16 @@ import org.kh.dajob.member.model.vo.Company;
 import org.kh.dajob.member.model.vo.CompanyType;
 import org.kh.dajob.member.model.vo.Member;
 import org.kh.dajob.member.model.vo.User;
+import org.kh.dajob.workboard.model.vo.WorkBoard;
 
 public interface MemberService {
 	Member loginMember(Member m);
 	
 	ArrayList<CompanyType> selectCompanyList();
+	
+	User selectUser(Member m);
+	
+	Company selectCompany(Member m);
 	
 	int checkIdDup(String id);
 	
@@ -23,4 +28,8 @@ public interface MemberService {
 	int updateMember(Member m);
 
 	int deleteMember(String id);
+	
+	ArrayList<WorkBoard> likeCompList(String memberId, int page);
+
+	int getListCount(String memberId);
 }

@@ -5,9 +5,12 @@ import java.util.Map;
 
 import org.kh.dajob.cert.model.vo.Cert;
 import org.kh.dajob.cert.model.vo.UserCert;
+import org.kh.dajob.member.model.vo.Member;
 
 public interface CertService {
 	ArrayList<Cert> selectList();
+	
+	ArrayList<UserCert> selectUserCertList(Member m);
 	
 	int insertUserCert(Map<String, Object> map);
 	

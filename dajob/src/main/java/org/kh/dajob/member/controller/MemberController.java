@@ -15,6 +15,7 @@ import org.kh.dajob.member.model.service.MemberService;
 import org.kh.dajob.member.model.vo.Company;
 import org.kh.dajob.member.model.vo.Member;
 import org.kh.dajob.member.model.vo.User;
+import org.kh.dajob.workboard.model.vo.WorkBoard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,10 +74,27 @@ public class MemberController {
 	}
 	
 	@RequestMapping("myinfo.do")
-	public String myinfoView(){
+	public String myinfoView(HttpSession session, Model model){
 		logger.info("myinfoView() call...");
+		Member m = (Member)session.getAttribute("member");
+		String returnPage = null;
 		
-		return "member/myinfo";
+		if(m.getMember_type_code().equals("U")) {
+			model.addAttribute("myinfo", memberService.selectUser(m));
+			returnPage = "member/myinfo";
+		} else if(m.getMember_type_code().equals("C")) {
+			model.addAttribute("myinfo", memberService.selectCompany(m));
+			returnPage = "member/myinfo";
+		} else {
+			model.addAttribute("myinfo", memberService.loginMember(m));
+			returnPage = "member/myinfo";
+		}
+		if(!returnPage.equals("member/myinfo")) {
+			model.addAttribute("message", "회원 가입 서비스 실패!!");
+			returnPage = "member/memberError";
+		}
+		
+		return returnPage;
 	}
 	// 아이디 중복 체크
 	@RequestMapping(value = "dupid.do", method = RequestMethod.POST)
@@ -264,6 +282,39 @@ public class MemberController {
 		} else {
 			model.addAttribute("message", "회원 탈퇴 불가, 정상적인 접속이 아닙니다.");
 			returnPage = "member/memberError";
+		}
+		return returnPage;
+	}
+	
+	@RequestMapping(value = "likeCompList.do", method = {RequestMethod.GET, RequestMethod.POST})
+	public String likeCompList(HttpSession session, Model model, HttpServletRequest request){
+		String returnPage = null;
+		Member m = (Member)session.getAttribute("member");
+		String memberId = m.getMember_id();
+		
+		int page = 1;
+		int limit = 10;
+		if(request.getParameter("page") != null){
+			page = Integer.parseInt(request.getParameter("page"));
+		}
+		
+		int listCount = memberService.getListCount(memberId);
+		int maxPage = (int)((double)listCount / limit + 0.9);
+		int startPage = (((int)((double)page / limit + 0.9)) - 1) * limit + 1;
+		int endPage = startPage + limit - 1;
+				
+		if(maxPage < endPage){
+			endPage = maxPage;
+		}
+		
+		ArrayList<WorkBoard> list = memberService.likeCompList(memberId, page);
+		if(list != null){
+			request.setAttribute("list", list);
+			request.setAttribute("page", page);
+			request.setAttribute("startPage", startPage);
+			request.setAttribute("endPage", endPage);
+			request.setAttribute("maxPage", maxPage);
+			returnPage = "workboard/likeListBoard";
 		}
 		return returnPage;
 	}
