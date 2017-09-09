@@ -37,6 +37,12 @@ public class HomeController {
 		return "contact";
 	}
 	
+	@RequestMapping(value = "resume.do")
+	public String resumeGo() {
+		
+		return "mypage/resume";
+	}
+	
 	@RequestMapping(value = "404-page.do")
 	public String pageNotFound(HttpServletRequest request, Model model) throws IOException {
 		request.setCharacterEncoding("UTF-8");

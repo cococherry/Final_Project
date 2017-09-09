@@ -63,17 +63,21 @@
                     </li>
                     <li><a href="#" id="mypage">마이페이지</a>
                         <ul class="dropdown-menu">
+                        <!--------- 일반 회원 메뉴 구성 --------->
                         <c:if test="${ member.member_type_code == 'U' }" >
                             <li><a href="myinfo.do">내 정보 수정/탈퇴</a></li>
-                            <li><a href="portfolio_masonry_3.html">내 이력서 조회</a></li>
+                            <li><a href="resume.do">내 이력서 조회</a></li>
                              <li><a href="likeCompList.do">선호 기업 리스트</a></li>
-                            <li><a href="portfolio_single.html">입사 신청 기업 목록</a></li>
-                            <li><a href="portfolio_single.html">내 능력 분석</a></li>
-                            <li><a href="portfolio_single.html">화상 면접 대기실</a></li>
+                            <li><a href="#">입사 신청 기업 목록</a></li>
+                            <li><a href="#">내 능력 분석</a></li>
+                            <li><a href="#">화상 면접 대기실</a></li>
                             </c:if>
+                         <!---------/ 일반 회원 메뉴 구성 --------->
+                         
+                         <!--------- 기업 회원 메뉴 구성 --------->
                    			<c:if test="${ member.member_type_code == 'C' }" >
                    				<li><a href="myinfo.do">기업 정보 수정/탈퇴</a></li>
-                            <li><a href="portfolio_masonry_3.html">등록한 구인 정보 list</a>
+                            <li><a href="#">등록한 구인 정보 list</a>
                                 <ul class="dropdown-menu">
                                     <li><a href="portfolio_masonry_2.html">Masonry portfolio 2</a></li>
                                     <li><a href="portfolio_masonry_3.html">Masonry portfolio 3</a></li>
@@ -81,9 +85,10 @@
                                 </ul>
                             </li>
                             <li><a href="powerlink.do">PowerLink 정보</a></li>
-                            <li><a href="portfolio_single.html">구직 신청자 리스트</a></li>
-                            <li><a href="portfolio_single.html">화상 면접 대기실</a></li>
+                            <li><a href="#">구직 신청자 리스트</a></li>
+                            <li><a href="#">화상 면접 대기실</a></li>
                    			</c:if>
+                         <!---------/ 기업 회원 메뉴 구성 --------->
                         </ul>
                     </li>
                     <li><a href="#" id="itinfo">IT정보</a></li>
