@@ -205,7 +205,7 @@ label {
 									<c:forEach var="cert" items="${userCert}">
 										<c:forEach var="certNo" items="${certList}">
 										<tr>
-											<td><c:if test="${cert.cert_no eq certNo.cert_no}">${certNo.cert_name}</c:if></td>
+											<td class="myCert"><c:if test="${cert.cert_no eq certNo.cert_no}">${certNo.cert_name}</c:if></td>
 											<td>${cert.cert_date}</td>
 										</tr>
 										</c:forEach>
@@ -281,18 +281,22 @@ label {
 								</tr>
 								<tr><td>담당자이름 : </td>
 									<td><input type="text" name="member_name"
-										placeholder="담당자 이름" size="52%"></td>
+										value="${myinfo.member_name}" size="52%"></td>
 								</tr>
 								<tr><td>연락처 : </td>
 									<td><input type="tel" name="member_phone"
-										placeholder="연락처" size="52%" pattern="[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}"></td>
+										value="${myinfo.member_phone}" size="52%" pattern="[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}"></td>
 								</tr>
 								<tr><td>E-Mail : </td>
-									<td><input type="text" name="email1" placeholder="담당자 이메일" size="15">&nbsp;
-										@&nbsp; <input type="text" name="email2" value=""
-										style="width: 120px" readOnly>&nbsp; 
+									<td>
+									<c:forTokens var="email" items="${myinfo.member_email}" delims="@" varStatus="status">
+									<c:if test="${status.count eq 1}">
+									<input type="text" name="email1" size="15" value="${email}">&nbsp;
+										@&nbsp;</c:if><c:if test="${status.count eq 2}"> <input type="text" name="email2"
+										style="width: 120px" value="${email}" readOnly></c:if>
+									</c:forTokens>&nbsp; 
 										<select	name="email" onchange="email_change(this)" style="height:35px;">
-											<option value="0">선택하세요</option>
+											<option value="0">변경하실 Email</option>
 											<option value="9">직접입력</option>
 											<option value="naver.com">naver.com</option>
 											<option value="nate.com">nate.com</option>
@@ -304,30 +308,43 @@ label {
 									</select></td>
 								</tr>
 								<tr><td>우편번호 : </td>
-									<td><input type="text" name="post_code"
-										placeholder="우편번호">&nbsp;&nbsp;<button type="button" class="btn btn-default btn-xs" onclick="execDaumPostcode();">찾기</button></td>
+									<td>
+									<c:forTokens var="addr" items="${myinfo.member_address}" delims="," varStatus="status">
+										<c:if test="${ status.count eq 1}">
+									<input type="text" name="post_code"
+										value="${addr}">&nbsp;&nbsp;<button type="button" class="btn btn-default btn-xs" onclick="execDaumPostcode();">찾기</button>
+										</c:if></c:forTokens></td>
 								</tr>
-								<tr><td>회사주소 : </td>
-									<td><input type="text" name="addr1"
-										placeholder="주소" size="22%" >&nbsp;<input type="text" name="addr2"
-										placeholder="상세주소" size="22%" ></td>
+								<tr><td>기업 주소 : </td>
+									<td><c:forTokens var="addr" items="${myinfo.member_address}" delims="," varStatus="status">
+									<c:if test="${ status.count eq 2}">
+									<input type="text" name="addr1" value="${addr}" size="22%" ></c:if>
+									<c:if test="${ status.count eq 3}">
+									&nbsp;<input type="text" name="addr2" value="${addr}" size="22%">
+									</c:if>
+										</c:forTokens></td>
 								</tr>
 								<tr><td>기업 규모 : </td>
 									<td><select	name="company_type" style="height:35px; width:145px;">
 											<option value="0">선택하세요</option>
 											<c:forEach var="comType" items="${comTypeList}">
+											<c:if test="${comType.company_type eq myinfo.company_type}">
+												<option value="${comType.company_type}" selected>${comType.company_tname}</option>
+											</c:if>
+											<c:if test="${comType.company_type ne myinfo.company_type}">
 												<option value="${comType.company_type}">${comType.company_tname}</option>
+											</c:if>
 											</c:forEach>
 									</select></td>
 								</tr>
 								<tr><td>사원수 : </td>
-									<td><input type="number" name="company_staff" placeholder="최소 값은 1입니다" min="1" style="width:200px;"></td>
+									<td><input type="number" name="company_staff" value="${myinfo.company_staff}" min="1" style="width:200px;"></td>
 								</tr>
 								<tr><td>기업자본 : </td>
-									<td><input type="number" name="company_capital" placeholder="기본 단위는 백만원입니다." min="1" style="width:200px;"></td>
+									<td><input type="number" name="company_capital" value="${myinfo.company_capital}" min="1" style="width:200px;"> (백만원 단위)</td>
 								</tr>
 								<tr><td>창립연도 : </td>
-									<td><input type="date" name="company_date"></td>
+									<td><input type="date" name="company_date" value="${company_date}"></td>
 								</tr>
 								<tr><td>복지 정보 : </td>
 									<td>
@@ -344,7 +361,7 @@ label {
 												<td><input type="checkbox" name="company_welfare[]" class="welfare inputBtn" value="유류비 지원">
 									<label for="company_welfare" class="inputBtn" style="display:inline;">유류비 지원</label>
 									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-												<td><input type="checkbox" name="company_welfare" class="welfare inputBtn" value="숙식 제공">
+												<td><input type="checkbox" name="company_welfare[]" class="welfare inputBtn" value="숙식 제공">
 									<label for="company_welfare" class="inputBtn" style="display:inline;">숙식 제공</label></td>
 											</tr>
 											<tr>
@@ -533,10 +550,18 @@ label {
 	});
 
 	$(function() {
+        var checkCompWelfare = "<c:out value='${myinfo.company_welfare}'/>";
+		var chkwel = checkCompWelfare.split(',');
+        chkwel.forEach(function(value){
+           $(".welfare").each(function(){
+               if($(this).val == value){
+                   $(this).attr("checked");
+               }
+            }); 
+        });
 		$('.welfare').click(function() {
 			// 배열 선언
 			var arrayParam = new Array();
-
 			//each로 loop를 돌면서 checkbox의 check된 값을 가져와 담아준다.
 			$(".welfare:checked").each(function() {
 				arrayParam.push($(this).val());

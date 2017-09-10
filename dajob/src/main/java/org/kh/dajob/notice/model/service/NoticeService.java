@@ -1,0 +1,30 @@
+package org.kh.dajob.notice.model.service;
+
+import java.util.ArrayList;
+
+import org.kh.dajob.notice.model.vo.Notice;
+import org.kh.dajob.notice.model.vo.NoticeReply;
+
+public interface NoticeService {
+	ArrayList<Notice> selectNoticeList();
+	
+	ArrayList<Notice> selectNoticeTitle(String notice_title);
+	
+	ArrayList<NoticeReply> selectReplyList();
+	
+	Notice selectOne();
+	
+	NoticeReply selectReplyOne();
+	
+	int insertNotice(Notice n);
+	
+	int insertNoticeReply(NoticeReply np);
+	
+	int updateNotice(Notice n);
+	
+	int updateNoticeReply(NoticeReply np);
+	
+	int deleteNotice(String notice_no);
+	
+	int deleteNoticeReply(String notice_repno);
+}

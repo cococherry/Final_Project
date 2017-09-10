@@ -20,8 +20,8 @@
     <link rel="stylesheet" href="<c:url value='/resources/css/font-awesome.css'/>"/>
     <link rel="stylesheet" href="<c:url value='/resources/css/animate.css'/>"/>
 
-	<!-- 서머노트 CSS FILES -->
-	<link href="${pageContext.request.contextPath}/resources/api/summernote-0.8.7-dist/dist/summernote.css" rel="stylesheet">
+	<!-- CKeditor CSS FILES -->
+	<link href="${pageContext.request.contextPath}/resources/api/CKeditor/contents.css"" rel="stylesheet">
 	<%-- <link rel="stylesheet" href="<c:url value='/resources/css/sntest.css'/>"/> --%>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -144,7 +144,8 @@
 			            <hr>
 					</div>
 					<!-- <div class="mytest"> -->
-						<textarea class="summernote">이력서 작성</textarea>
+						<textarea cols="100" id="editor1" name="editor1" rows="10">&lt;p&gt;This is some &lt;strong&gt;sample text&lt;/strong&gt;.		You are using &lt;a href="http://ckeditor.com/"&gt;CKEditor&lt;/a&gt;.&lt;/p&gt;
+						CKeditor 사용은 api 내의 samples를 활용해주세요~!</textarea>
 					<!-- </div> -->
 		        </div><!--left end-->
 		        
@@ -231,43 +232,13 @@
 	<!--end footer-->
 		<!-- include summernote css/js-->
 
-	<script src="${pageContext.request.contextPath}/resources/api/summernote-0.8.7-dist/dist/summernote.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/api/CKeditor/ckeditor.js"></script>
 	<!-- summer note korean language pack -->
-	<script src="${pageContext.request.contextPath}/resources/api/summernote-0.8.7-dist/dist/lang/summernote-ko-KR.js"></script>
-	<script type="text/javascript">
-	$(function() {
-		$('.summernote').summernote({
-		      width: '100%',	    
-		      height: 300,          // 기본 높이값
-		      minHeight: null,      // 최소 높이값(null은 제한 없음)
-		      maxHeight: null,      // 최대 높이값(null은 제한 없음)
-		      focus: true,          // 페이지가 열릴때 포커스를 지정함
-		      lang: "ko-KR",         // 한국어 지정(기본값은 en-US)
-		      callbacks: {
-		      /* onImageUpload: function(files, editor, welEditorble) {
-		    	  console.log(files);
-		    	  console.log(files[0]);
-				data = new FormData();
-				data.append("file",files[0]);
-				var $note = $(this);
-				$.ajax({
-					data : data,
-					type : "post",
-					url : '/made/designUploadImg', // servlet url
-					cache : false,
-					contentType : false,
-					processData : false,
-					success : function(url){
-						//alert(url);
-						$note.summernote('insertImage',url);
-					}, error : function(request,status,error) {
-						alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-					}
-				});
-			} */
-		      }
-		    });
-		});
+	<script src="${pageContext.request.contextPath}/resources/api/CKeditor/lang/ko.js"></script>
+	<script>
+		CKEDITOR.replace( 'editor1', {
+			height: 400
+		} );
 	</script>
 </body>
 </html>

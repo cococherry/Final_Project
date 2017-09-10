@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Itinfo">
+
+	<resultMap id="resultItinfo" type="Itinfo">
+		<id property="itinfo_no" column="ITINFO_NO" />
+		<result property="itinfo_title" column="ITINFO_TITLE" />
+		<result property="itinfo_content" column="ITINFO_CONTENT" />
+		<result property="itinfo_img" column="ITINFO_IMG" />
+		<result property="itinfo_date" column="ITINFO_DATE" />
+	</resultMap>
+	<!-- SEQUENCE SEQ_ITINFO 사용하여 Insert 구현 예정  -->
+
+</mapper>
