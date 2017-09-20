@@ -64,11 +64,10 @@
       <tr>
       	<th>회사 이름</th>
         <th>제목</th>
-        
-        <th>규모</th>
         <th>근무지</th>
         <th>직무</th>
-        <th>스킬</th>
+        <th>필요기술</th>
+        <th>마감일</th>
       </tr>
     </thead>
     <tbody>
@@ -83,9 +82,11 @@
         (${comtype.company_tname})
         </c:if></c:forEach></td>
         <td><a href="${workdetail}">${workherelist.work_title }</a></td>
+        
         <td>${workherelist.work_workplace }</td>
         <td>${workherelist.work_job}</td>
         <td>${workherelist.work_skill}</td>
+        <td>${workherelist.work_enddate }</td>
       </tr>
       </c:forEach>
     </tbody>

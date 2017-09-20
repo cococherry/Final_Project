@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="<c:url value='/resources/css/font-awesome.css'/>"/>
     <link rel="stylesheet" href="<c:url value='/resources/css/animate.css'/>"/>
 	<c:set var="workhere" value="${workhere}"/>
+	<c:set var="skill" value="${skill}"/>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -59,80 +60,119 @@
 
 
 
-    <!-- Page Content -->
-    <div class="container">
+  <div class="container">
+        <!-- ===========================
+        HEADER
+        ============================ -->
+        <div id="header" class="row">
+            <div class="col-sm-2">
+                <img class="propic" src="/dajob/resources/images/joboffer/bappy.jpg" alt="" height="180px">
+            </div>
+            <!-- photo end-->
 
-      <div class="row">
-        <div class="col-sm-8">
-          <h2 class="mt-4">What We Do</h2>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A deserunt neque tempore recusandae animi soluta quasi? Asperiores rem dolore eaque vel, porro, soluta unde debitis aliquam laboriosam. Repellat explicabo, maiores!</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis optio neque consectetur consequatur magni in nisi, natus beatae quidem quam odit commodi ducimus totam eum, alias, adipisci nesciunt voluptate. Voluptatum.</p>
-          <p>
-            <a class="btn btn-primary btn-lg" href="#">Call to Action &raquo;</a>
-          </p>
-        </div>
-        <div class="col-sm-4">
-          <h2 class="mt-4">Contact Us</h2>
-          <address>
-            <strong>Start Bootstrap</strong>
-            <br>3481 Melrose Place
-            <br>Beverly Hills, CA 90210
-            <br>
-          </address>
-          <address>
-            <abbr title="Phone">P:</abbr>
-            (123) 456-7890
-            <br>
-            <abbr title="Email">E:</abbr>
-            <a href="mailto:#">name@example.com</a>
-          </address>
-        </div>
-      </div>
-      <!-- /.row -->
+            <div class="col-lg-10">
+                <div class="cv-title">
+                    
+                    <h2>${workhere.work_job }</h2>
+                    <a class="btn btn-success" href=""><span class="glyphicon glyphicon-edit"></span>인터뷰 신청하기</a>
+                </div><!-- Title end-->
 
-      <div class="row">
-        <div class="col-sm-4 my-4">
-          <div class="card">
-            <img class="card-img-top" src="http://placehold.it/300x200" alt="">
-            <div class="card-body">
-              <h4 class="card-title">Card title</h4>
-              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque sequi doloribus.</p>
-            </div>
-            <div class="card-footer">
-              <a href="#" class="btn btn-primary">Find Out More!</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-4 my-4">
-          <div class="card">
-            <img class="card-img-top" src="http://placehold.it/300x200" alt="">
-            <div class="card-body">
-              <h4 class="card-title">Card title</h4>
-              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque sequi doloribus totam ut praesentium aut.</p>
-            </div>
-            <div class="card-footer">
-              <a href="#" class="btn btn-primary">Find Out More!</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-4 my-4">
-          <div class="card">
-            <img class="card-img-top" src="http://placehold.it/300x200" alt="">
-            <div class="card-body">
-              <h4 class="card-title">Card title</h4>
-              <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque.</p>
-            </div>
-            <div class="card-footer">
-              <a href="#" class="btn btn-primary">Find Out More!</a>
-            </div>
-          </div>
-        </div>
+            </div><!-- header right end-->
+        </div><!-- header end-->
 
-      </div>
-      <!-- /.row -->
+        <hr class="firsthr">
 
-    </div>
-    <!-- /.container -->
+        <!-- ===========================
+        BODY LEFT PART
+        ============================ -->
+        <div class="col-md-8 mainleft">
+            <div id="statement" class="row mobmid">
+                <div class="col-sm-1">
+                    <span class="secicon fa fa-user"></span>
+                </div><!--icon end-->
+
+                <div class="col-sm-11">
+                    <h3>${workhere.work_title } </h3>
+                    <blockquote>
+                    <p>${workhere.work_content }</p>
+                    </blockquote>
+                </div><!--info end-->
+            </div><!--personal statement end-->
+
+            <hr>
+            <!-- ===========================
+            JOB EXPERIENCES
+            ============================ -->
+            <div id="job" class="row mobmid">
+                <div class="col-sm-1">
+                    <span class="secicon fa fa-briefcase"></span>
+                </div><!--icon end-->
+
+                <div class="col-sm-11">
+                    <h3>Job Experiences</h3>
+
+                    <div class="row">
+                        <div class="col-md-9">
+                            <h4>Lead Graphic Designer</h4>
+                            <p class="sub"><a href="">Lifeview Media Ltd.</a>
+                            </p>
+                            <p>Adipiscing elit. Nullam dapibus vehicula condimentum. Curabitur elit enim, accumsan vitae tristique ut, mollis at orci. Fusce cursus interdum neque nec aliquam. Proin turpis leo, laoreet non ultricies non, dictum nec nulla.</p>
+                        </div>
+
+                        <div class="year col-md-3">
+                            <p>2008 - present</p>
+                        </div>
+                    </div><!--Job 1 end-->
+                </div><!--Job experiences end-->
+            </div><!--Job experiences end-->
+        </div><!--left end-->
+        
+        <!-- ===========================
+        SIDEBAR
+        =========================== -->
+        <div class="col-md-4 mainright">
+            <div class="row">
+                <div class="col-sm-1 col-md-2 mobmid">
+                    <span class="secicon fa fa-magic"></span>
+                </div><!--icon end-->
+
+                <div class="col-sm-11 col-md-10">
+                    <h3 >필요한 기술 </h3>
+                    <c:forEach var="skill" items="${skill}">
+                    <h4><span class="glyphicon glyphicon-star">${skill}</span></h4>
+                    </c:forEach>
+					
+                </div><!--info end-->
+            </div><!--tech skills end-->
+            
+            <hr>
+
+            <div class="row mobmid">
+                <div class="col-sm-1 col-md-2">
+                    <span class="secicon fa fa-trophy"></span>
+                </div><!--icon end-->
+
+                <div class="col-sm-11 col-md-10 ">
+                    <h3>Awards</h3>
+
+                    <div class="award">
+                        <h4>Best Designer 2012</h4>
+                        <p class="sub"><a href="">Life View Media Ltd.</a></p>
+                        <p>Studying all aspect of Graphic Design Including Advertising Design, Branding, Copy Exhibition Design, Ilustration.</p>
+                    </div>
+                    <!--1st award end-->
+
+                    <div class="award">
+                        <h4>Best Designer 2011</h4>
+                        <p class="sub"><a href="">Alexa Design Solution</a></p>
+                        <p>Studying all aspect of Graphic Design Including Advertising Design, Branding, Copy Exhibition Design, Ilustration, Information Design, Packaging Design and Website Design</p>
+                    </div><!--1st award end-->
+                </div><!--awards end-->
+
+            </div>
+            
+        </div><!--right end-->
+    </div><!--container end-->
 	
 	
 	
