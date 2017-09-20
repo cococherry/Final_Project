@@ -57,8 +57,8 @@
 
                     <li><a href="#" id="workhere">Work Here</a>
                     	<ul class="dropdown-menu">
-                            <li><a href="#">직업별 분류</a></li>
-                            <li><a href="#">능력별 분류</a></li>
+                            <li><a href="jobList.do">직업별 분류</a></li>
+                            <li><a href="skillList.do">능력별 분류</a></li>
                         </ul>
                     </li>
                     <li><a href="#" id="mypage">마이페이지</a>
@@ -70,7 +70,7 @@
                              <li><a href="likeCompList.do">선호 기업 리스트</a></li>
                             <li><a href="#">입사 신청 기업 목록</a></li>
                             <li><a href="#">내 능력 분석</a></li>
-                            <li><a href="#">화상 면접 대기실</a></li>
+                            <li><a href="interviewList.do">화상 면접 대기실</a></li>
                             </c:if>
                          <!---------/ 일반 회원 메뉴 구성 --------->
                          
@@ -86,7 +86,12 @@
                             </li>
                             <li><a href="powerlink.do">PowerLink 정보</a></li>
                             <li><a href="#">구직 신청자 리스트</a></li>
-                            <li><a href="#">화상 면접 대기실</a></li>
+                            <c:if test="${ member.member_type_code == 'U' }">
+                            <li><a href="interviewList.do">화상 면접 대기실</a></li>
+                            </c:if>
+                            <c:if test="${member.member_type_code == 'C' }">
+                            <li><a href="interviewCompanyList.do">화상 면접 대기실</a></li>
+                            </c:if>
                    			</c:if>
                          <!---------/ 기업 회원 메뉴 구성 --------->
                         </ul>

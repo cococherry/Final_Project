@@ -58,25 +58,38 @@
         </div> <!--./Container-->
     </header>
 	<div class="container">
-  <h2>${company.company_name}</h2>
-  <p>The .table-hover class enables a hover state on table rows:</p>            
+  <h2>${company.company_name}</h2>      
   <table class="table table-hover">
     <thead>
       <tr>
-        <th>Firstname</th>
-        <th>Lastname</th>
-        <th>Email</th>
-        <th>Email</th>
-        <th>Email</th>
-        <th>Email</th>
+        <th>인터뷰 번호</th>
+        <th>회사 이름</th>
+        <th>신청자 이름</th>
+        <th>면접 상태</th>
       </tr>
     </thead>
     <tbody>
    		 <c:forEach var="interviewlist" items="${interviewlist}">
       <tr>
         <td>${interviewlist.interview_no }</td>
-        <td>${interviewlist.interviewer}</td>
-        <td>${interviewlist.interviewee }</td>
+        <c:forEach var="comp" items="${interviewname}">
+        <c:if test="${interviewlist.interviewer eq comp.member_id}">
+        <td>${comp.company_name}</td>
+        </c:if>
+        </c:forEach>
+        <c:forEach var="user" items="${interviewee}">
+        <c:if test="${interviewlist.interviewee eq user.member_id}">
+        <td>${user.member_name }</td>
+        </c:if>
+        </c:forEach>
+        <td>
+        <c:url var="interDetail" value="/interviewDetail.do">
+        	<c:param name="interview_no" value="${interviewlist.interview_no}"/>
+        </c:url>
+        <c:if test="${interviewlist.interview_status eq 'H' }">대기</c:if>
+        <c:if test="${interviewlist.interview_status eq 'E' }"><a href="${interDetail}">입장 가능</a></c:if>
+        <c:if test="${interviewlist.interview_status eq 'Q' }">종료</c:if>
+        </td>
       </tr>
       </c:forEach>
     </tbody>

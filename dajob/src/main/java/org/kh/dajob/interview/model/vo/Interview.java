@@ -10,7 +10,8 @@ public class Interview implements Serializable{
 	private String interviewee;
 	private String interview_question;
 	private String interview_answer;
-	private Date interview_date;
+	private Date interview_start_date;
+	private Date interview_end_date;
 	private String interview_status;
 	private String work_no;
 	
@@ -56,12 +57,20 @@ public class Interview implements Serializable{
 		this.interview_answer = interview_answer;
 	}
 
-	public Date getInterview_date() {
-		return interview_date;
+	public Date getInterview_start_date() {
+		return interview_start_date;
 	}
 
-	public void setInterview_date(Date interview_date) {
-		this.interview_date = interview_date;
+	public void setInterview_start_date(Date interview_start_date) {
+		this.interview_start_date = interview_start_date;
+	}
+
+	public Date getInterview_end_date() {
+		return interview_end_date;
+	}
+
+	public void setInterview_end_date(Date interview_end_date) {
+		this.interview_end_date = interview_end_date;
 	}
 
 	public String getInterview_status() {
@@ -85,14 +94,16 @@ public class Interview implements Serializable{
 	}
 
 	public Interview(String interview_no, String interviewer, String interviewee, String interview_question,
-			String interview_answer, Date interview_date, String interview_status, String work_no) {
+			String interview_answer, Date interview_start_date, Date interview_end_date, String interview_status,
+			String work_no) {
 		super();
 		this.interview_no = interview_no;
 		this.interviewer = interviewer;
 		this.interviewee = interviewee;
 		this.interview_question = interview_question;
 		this.interview_answer = interview_answer;
-		this.interview_date = interview_date;
+		this.interview_start_date = interview_start_date;
+		this.interview_end_date = interview_end_date;
 		this.interview_status = interview_status;
 		this.work_no = work_no;
 	}
@@ -101,9 +112,11 @@ public class Interview implements Serializable{
 	public String toString() {
 		return "Interview [interview_no=" + interview_no + ", interviewer=" + interviewer + ", interviewee="
 				+ interviewee + ", interview_question=" + interview_question + ", interview_answer=" + interview_answer
-				+ ", interview_date=" + interview_date + ", interview_status=" + interview_status + ", work_no="
-				+ work_no + "]";
+				+ ", interview_start_date=" + interview_start_date + ", interview_end_date=" + interview_end_date
+				+ ", interview_status=" + interview_status + ", work_no=" + work_no + "]";
 	}
+	
+	
 
 	
 }

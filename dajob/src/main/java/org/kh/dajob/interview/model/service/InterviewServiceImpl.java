@@ -16,8 +16,8 @@ public class InterviewServiceImpl implements InterviewService{
 	
 	public InterviewServiceImpl(){}
 	@Override
-	public Interview selectInterview(Interview i) {
-		return interviewDao.selectInterview(i);
+	public Interview selectInterview(String interview_no) {
+		return interviewDao.selectInterview(interview_no);
 	};
 	@Override
 	public ArrayList<Interview> selectInterviewList(){
@@ -39,6 +39,10 @@ public class InterviewServiceImpl implements InterviewService{
 	@Override
 	public int updateInterview(Interview i) {
 		return interviewDao.updateInterview(i);
+	};
+	@Override
+	public String selectCompanyName(Interview i) {
+		return interviewDao.selectCompanyName(i);
 	};
 
 }

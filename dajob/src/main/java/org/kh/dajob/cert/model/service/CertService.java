@@ -12,7 +12,11 @@ public interface CertService {
 	
 	ArrayList<UserCert> selectUserCertList(Member m);
 	
+	ArrayList<UserCert> selectMyCertList(Member m);
+	
 	int insertUserCert(Map<String, Object> map);
 	
 	int deleteUserCert(String member_id);
+	
+	int countCert(String userid);
 }

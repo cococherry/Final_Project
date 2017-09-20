@@ -16,8 +16,8 @@ public class InterviewDao {
 	
 	public InterviewDao() {}
 	
-	public Interview selectInterview(Interview i) {
-		return sqlSession.selectOne("Interview.selectInterview", i);
+	public Interview selectInterview(String interview_no) {
+		return sqlSession.selectOne("Interview.selectInterview", interview_no);
 
 	}
 
@@ -50,6 +50,10 @@ public class InterviewDao {
 
 	public int updateInterview(Interview i) {
 		return sqlSession.update("Interview.updateInterview",i);
+	}
+
+	public String selectCompanyName(Interview i) {
+		return sqlSession.selectOne("Interview.selectCompanyName",i);
 	}
 
 }

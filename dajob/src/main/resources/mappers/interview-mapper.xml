@@ -10,10 +10,12 @@
 		<result property="interviewee" column="INTERVIEWEE" />
 		<result property="interview_question" column="INTERVIEW_QUESTION" />
 		<result property="interview_answer" column="INTERVIEW_ANSWER" />
-		<result property="interview_date" column="INTERVIEW_DATE" />
+		<result property="interview_start_date" column="INTERVIEW_START_DATE" />
+		<result property="interview_end_date" column="INTERVIEW_END_DATE" />
 		<result property="interview_status" column="INTERVIEW_STATUS" />
 		<result property="work_no" column="WORK_NO" />
 	</resultMap>
+	
 	
 	<select id="selectInterviewList" resultType="arraylist" resultMap="resultInterview">
 		SELECT * FROM INTERVIEW 
@@ -28,11 +30,11 @@
 	</select>
 	
 	<select id="selectInterview" parameterType="string" resultType="Interview" resultMap="resultInterview">
-		SELECT * FROM INTERVIEW WHERE INTERVIEW_NO = #{interviewNo}
+		SELECT * FROM INTERVIEW WHERE INTERVIEW_NO = #{interview_no}
 	</select>
 	
 	<insert id="insertInterview" parameterType="Interview">
-		INSERT INTO INTERVIEW VALUES(#{interview_no},#{interviewer},#{interviewee},#{interview_question},#{interview_answer},#{interview_date},#{interview_status},#{work_no})
+		INSERT INTO INTERVIEW VALUES(#{interview_no},#{interviewer},#{interviewee},#{interview_question},#{interview_answer},#{interview_start_date},#{interview_end_date},#{interview_status},#{work_no})
 	</insert>
 	
 	<delete id="deleteInterview" parameterType="string">
@@ -40,7 +42,7 @@
 	</delete>
 	
 	<update id="updateInterview" parameterType="string">
-		UPDATE INTERVIEW SET INTERVIEWER = #{interviewer}, INTERVIEWEE = #{interviewee}, INTERVIEW_QUESTION = #{interview_question}, INTERVIEW_ANSWER = #{interview_answer}, INTERVIEW_DATE = #{interview_date}, INTERVIEW_STATUS = #{interview_status}, WORK_NO = #{work_no}
+		UPDATE INTERVIEW SET INTERVIEWER = #{interviewer}, INTERVIEWEE = #{interviewee}, INTERVIEW_QUESTION = #{interview_question}, INTERVIEW_ANSWER = #{interview_answer}, INTERVIEW_START_DATE = #{interview_start_date},INTERVIEW_END_DATE = #{interview_end_date}, INTERVIEW_STATUS = #{interview_status}, WORK_NO = #{work_no}
 	</update>
 
 </mapper>

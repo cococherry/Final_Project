@@ -28,6 +28,10 @@ public class MemberDao {
 		return sqlSession.selectOne("User.selectUser", m);
 	}
 
+	public ArrayList<Company> selectCompanyAll() {
+		return new ArrayList<Company>(sqlSession.selectList("Company.selectCompanyAll"));
+	}
+	
 	public Company selectCompany(Member m) {
 		return sqlSession.selectOne("Company.selectCompany", m);
 	}
@@ -69,6 +73,10 @@ public class MemberDao {
 
 	public int getListCount(String memberId) {
 		return sqlSession.selectOne("WorkBoard.getListCount", memberId);
+	}
+
+	public ArrayList<User> selectUserAll() {
+		return new ArrayList<User>(sqlSession.selectList("User.selectUserList"));
 	}
 }
 

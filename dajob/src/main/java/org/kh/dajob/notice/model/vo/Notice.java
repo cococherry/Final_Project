@@ -26,6 +26,13 @@ public class Notice implements java.io.Serializable{
 		this.notice_date = notice_date;
 	}
 	
+	public Notice(String notice_no, String notice_title, String notice_content) {
+		super();
+		this.notice_no = notice_no;
+		this.notice_title = notice_title;
+		this.notice_content = notice_content;
+	}
+
 	@Override
 	public String toString() {
 		return "Notice [notice_no=" + notice_no + ", notice_title=" + notice_title + ", notice_content="

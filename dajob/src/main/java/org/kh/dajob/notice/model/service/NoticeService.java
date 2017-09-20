@@ -6,13 +6,13 @@ import org.kh.dajob.notice.model.vo.Notice;
 import org.kh.dajob.notice.model.vo.NoticeReply;
 
 public interface NoticeService {
-	ArrayList<Notice> selectNoticeList();
+	ArrayList<Notice> selectNoticeList(int currentPage, int limit);
 	
 	ArrayList<Notice> selectNoticeTitle(String notice_title);
 	
-	ArrayList<NoticeReply> selectReplyList();
+	ArrayList<NoticeReply> selectReplyList(String notice_no);
 	
-	Notice selectOne();
+	Notice selectOne(String notice_no);
 	
 	NoticeReply selectReplyOne();
 	
@@ -27,4 +27,6 @@ public interface NoticeService {
 	int deleteNotice(String notice_no);
 	
 	int deleteNoticeReply(String notice_repno);
+
+	int getListCount();
 }

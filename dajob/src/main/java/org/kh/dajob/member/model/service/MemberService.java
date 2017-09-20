@@ -13,6 +13,10 @@ public interface MemberService {
 	
 	ArrayList<CompanyType> selectCompanyList();
 	
+	ArrayList<Company> selectCompanyAll();
+	
+	ArrayList<User> selectUserAll();
+	
 	User selectUser(Member m);
 	
 	Company selectCompany(Member m);
@@ -32,4 +36,6 @@ public interface MemberService {
 	ArrayList<WorkBoard> likeCompList(String memberId, int page);
 
 	int getListCount(String memberId);
+	
+	
 }

@@ -17,6 +17,10 @@
 		<typeAlias type="org.kh.dajob.interview.model.vo.Interview" alias="Interview" />		
 		<typeAlias type="org.kh.dajob.workboard.model.vo.WorkBoard" alias="WorkBoard" />
 		<typeAlias type="org.kh.dajob.powerlink.model.vo.PowerLink" alias="PowerLink" />
+		<typeAlias type="org.kh.dajob.notice.model.vo.Notice" alias="Notice" />
+		<typeAlias type="org.kh.dajob.notice.model.vo.NoticeReply" alias="NoticeReply" />
+		<typeAlias type="org.kh.dajob.itinfo.model.vo.Itinfo" alias="Itinfo" />
+		<typeAlias type="org.kh.dajob.workhere.model.vo.Workhere" alias="Workhere" />
 	</typeAliases>
 	
 	<!-- <environments default="development">
@@ -39,5 +43,8 @@
 		<mapper resource="mappers/workboard-mapper.xml" />
 		<mapper resource="mappers/powerlink-mapper.xml" />
 		<mapper resource="mappers/interview-mapper.xml" />
+		<mapper resource="mappers/notice-mapper.xml" />
+		<mapper resource="mappers/itinfo-mapper.xml" />
+		<mapper resource="mappers/workhere-mapper.xml" />
 	</mappers>
 </configuration>

@@ -15,8 +15,8 @@ public class NoticeServiceImpl implements NoticeService {
 	private NoticeDao noticeDao;
 	
 	@Override
-	public ArrayList<Notice> selectNoticeList() {
-		return noticeDao.selectNoticeList();
+	public ArrayList<Notice> selectNoticeList(int currentPage, int limit) {
+		return noticeDao.selectNoticeList(currentPage, limit);
 	}
 
 	@Override
@@ -25,13 +25,13 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	@Override
-	public ArrayList<NoticeReply> selectReplyList() {
-		return noticeDao.selectReplyList();
+	public ArrayList<NoticeReply> selectReplyList(String notice_no) {
+		return noticeDao.selectReplyList(notice_no);
 	}
 
 	@Override
-	public Notice selectOne() {
-		return noticeDao.selectOne();
+	public Notice selectOne(String notice_no) {
+		return noticeDao.selectOne(notice_no);
 	}
 
 	@Override
@@ -67,5 +67,10 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public int deleteNoticeReply(String notice_repno) {
 		return noticeDao.deleteNoticeReply(notice_repno);
+	}
+
+	@Override
+	public int getListCount() {
+		return noticeDao.getListCount();
 	}
 }

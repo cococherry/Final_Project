@@ -15,12 +15,20 @@ public class CertDao {
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 	
+	public int countCert(String userid) {
+		return sqlSession.selectOne("Cert.countCert", userid);
+	}
+	
 	public ArrayList<Cert> selectList() {
 		return new ArrayList<Cert>(sqlSession.selectList("Cert.selectList"));
 	}
 
 	public ArrayList<UserCert> selectUserCertList(String userid) {
 		return new ArrayList<UserCert>(sqlSession.selectList("Cert.selectUserCert", userid));
+	}
+	
+	public ArrayList<UserCert> selectMyCertList(String userid) {
+		return new ArrayList<UserCert>(sqlSession.selectList("Cert.selectMyCert", userid));
 	}
 	
 	public int insertUserCert(Map<String, Object> map) {

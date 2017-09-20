@@ -20,9 +20,13 @@
 		<result property="resumefile" column="RESUMEFILE" />
 	</resultMap>
 	
-	<select id="selectUser" parameterType="Member" resultType="User"
+	<select id="selectUserList" resultType="arraylist" resultMap="resultUser">
+		SELECT * FROM VW_USER
+	</select>
+	
+	<select id="selectUser" parameterType="string" resultType="User"
 		resultMap="resultUser">
-		SELECT * FROM VW_USER WHERE MEMBER_ID = #{member_id} AND MEMBER_PASSWORD = #{member_password}
+		SELECT * FROM VW_USER WHERE MEMBER_ID = #{member_id}
 	</select>
 	
 	<insert id="insertUser" parameterType="User" flushCache="true"

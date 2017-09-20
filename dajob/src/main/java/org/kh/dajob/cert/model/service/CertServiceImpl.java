@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class CertServiceImpl implements CertService {
 
 	@Autowired
-	// 의존성 주입 : Dependancy Injection
+	// �쓽議댁꽦 二쇱엯 : Dependancy Injection
 	private CertDao certDao;
 
 	@Override
@@ -27,6 +27,12 @@ public class CertServiceImpl implements CertService {
 		String userid = m.getMember_id();
 		return certDao.selectUserCertList(userid);
 	}
+	
+	@Override
+	public ArrayList<UserCert> selectMyCertList(Member m) {
+		String userid = m.getMember_id();
+		return certDao.selectMyCertList(userid);
+	}
 
 	@Override
 	public int insertUserCert(Map<String, Object> map) {
@@ -36,6 +42,11 @@ public class CertServiceImpl implements CertService {
 	@Override
 	public int deleteUserCert(String member_id) {
 		return certDao.deleteUserCert(member_id);
+	}
+
+	@Override
+	public int countCert(String userid) {
+		return certDao.countCert(userid);
 	}
 	
 }

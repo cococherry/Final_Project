@@ -32,8 +32,191 @@
         width: 100%;
        }
     </style>
+     <script type="text/javascript" src="/webapp/WEB-INF/views/interview/broadcast.js"></script>
+    <script type="text/javascript">
+    var localVideo;
+    var remoteVideo;
+    var localStream;
+    var pc = null;
+    var wsock;
+    var remoteSrc = null;
+ 
+    var STUN_CONF = "NONE";
+ 
+    // 초기화 함수. 연결요청, 연결수신 client 공통.
+    initialize = function() {
+        console.log("Initializing");
+         
+        localVideo = document.getElementById("localVideo");
+        remoteVideo = document.getElementById("remoteVideo");
+ 
+        resetStatus();
+        // 카메라, 마이크 열기
+        getUserMedia();
+        // server와 websocket을 열어둔다.
+        openChannel();
+         
+        // 연결요청 버튼 click시 SDP정보 교환 시작
+        document.getElementById("join").onclick = function() {
+            rtcStart();
+        }
+    }
+ 
+    resetStatus = function() {
+        setStatus("Initializing...");
+    }
+ 
+    function openChannel() {
+        // SDP 정보 교환을 위해, 서버와 연결한다.
+        url = "http://192.168.30.57:4080";
+        wsock = new WebSocket(url);
+ 
+        wsock.onopen = function() {
+            console.log("open");
+        }
+         
+        // 서버로부터 메시지를 받을 때 처리.
+        wsock.onmessage = function(e) {
+            console.log("S->C:");
+            console.log(e.data);
+ 
+            // 연결 요청을 받는 client를 위한 코드. 수신측 client는 일단 메시지를 받아야 한다.
+            // peerConnection 객체를 생성하고 자신의 media stream을 연결한다.
+            if (pc == null) {
+                createPeerConnection();
+                pc.addStream(localStream);
+            }
+                 
+            // SDP message는 아래 함수로 넘겨주면 된다. 응답은 알아서 해주므로..
+            pc.processSignalingMessage(e.data);
+        }
+ 
+        wsock.onclose = function(e) {
+            console.log("closed");
+        }
+    }
+     
+    // 카메라, 마이크 자원을 얻는다.
+    getUserMedia = function() {
+        try {
+            navigator.webkitGetUserMedia({audio:true, video:true}, onUserMediaSuccess,
+                                   onUserMediaError);
+            console.log("Requested access to local media with new syntax.");
+        } catch (e) {
+            try {
+                navigator.webkitGetUserMedia("video,audio", onUserMediaSuccess,
+                                             onUserMediaError);
+                console.log("Requested access to local media with old syntax.");
+            } catch (e) {
+                alert("webkitGetUserMedia() failed. Is the MediaStream flag enabled in about:flags?");
+                console.log("webkitGetUserMedia failed with exception: " + e.message);
+            }
+        }
+    }
+ 
+    // peerConnection 생성
+    createPeerConnection = function() {
+        try {
+            // STUN서버 주소와 SDP 메시지를 보내는 함수를 넣어준다.
+            pc = new webkitDeprecatedPeerConnection(STUN_CONF,
+                                              onSignalingMessage);
+            console.log("Created webkitDeprecatedPeerConnnection with config");
+        } catch (e) {
+            console.log("Failed to create webkitDeprecatedPeerConnection, exception: " + e.message);
+            try {
+                pc = new webkitPeerConnection(STUN_CONF,
+                                      onSignalingMessage);
+                console.log("Created webkitPeerConnnection with config.");
+            } catch (e) {
+                console.log("Failed to create webkitPeerConnection, exception: " + e.message);
+                alert("Cannot create PeerConnection object; Is the 'PeerConnection' flag enabled in about:flags?");
+                return;
+            }
+        }
+ 
+        pc.onconnecting = onSessionConnecting;
+        pc.onopen = onSessionOpened;
+        pc.onaddstream = onRemoteStreamAdded;
+        pc.onremovestream = onRemoteStreamRemoved;
+    }
+ 
+    // 연결을 요청하는 client를 위한 함수
+    // join 버튼을 누르면 동작한다.
+    rtcStart = function() {
+ 
+        setStatus("Connecting...");
+        console.log("Creating PeerConnection.");
+        createPeerConnection();
+ 
+        console.log("Adding local stream.");
+         
+        // 자신의 media를 연결시킨다. peerConnection을 생성한 이후에 반드시 해줄 것.
+        pc.addStream(localStream);
+    }
+ 
+    setStatus = function(state) {
+        footer.innerHTML = state;
+    }
+     
+    // media관련 함수들
+     
+    onUserMediaSuccess = function(stream) {
+        console.log("User has granted access to local media.");
+        var url = webkitURL.createObjectURL(stream);
+        localVideo.style.opacity = 1;
+        localVideo.src = url;
+        localStream = stream;
+    }
+ 
+    onUserMediaError = function(error) {
+        console.log("Failed to get access to local media. Error code was " + error.code);
+        alert("Failed to get access to local media. Error code was " + error.code + ".");
+    }
+ 
+    // signaling 관련함수들
+     
+    onSignalingMessage = function(message) {
+        console.log('C->S: ' + message);
+        // 열어둔 websocket으로 SDP 메시지를 전송한다.
+        // peerConnection을 생성하자마자 바로 SDP 메시지를 보낸다.
+        wsock.send(message);   
+    }
+ 
+    onSessionConnecting = function(message) {
+        console.log("Session connecting.");
+    }
+ 
+    onSessionOpened = function(message) {
+        console.log("Session opened.");
+    }
+ 
+    onRemoteStreamAdded = function(event) {
+        console.log("Remote stream added.");
+        var url = webkitURL.createObjectURL(event.stream);
+        remoteVideo.style.opacity = 1;
+        remoteVideo.src = url;
+        remoteSrc = url;
+        setStatus("<input type=\"button\" id=\"hangup\" value=\"Hang up\" onclick=\"onHangup()\" />");
+    }
+ 
+    onRemoteStreamRemoved = function(event) {
+        console.log("Remote stream removed.");
+    }
+ 
+    onHangup = function() {
+        console.log("Hanging up.");
+        localVideo.style.opacity = 0;
+        remoteVideo.style.opacity = 0;
+        pc.close();
+        pc = null;
+        setStatus("You have left the call.");
+    }
+ 
+</script>
+<c:set var="interview" value="${interview}"/>
+<c:set var="interviewname" value="${interviewname}"/>
 </head>
-<body>
+<body onload="initialize();">
 
 	<!--Start Header-->
 	<header>
@@ -41,7 +224,7 @@
         <div class="container page_head">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12">
-                    <h2>구인신청자 상세화면</h2>
+                    <h2>화상 면접</h2>
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12">
                     <nav id="breadcrumbs">
@@ -55,325 +238,54 @@
             </div> <!--./row-->
         </div> <!--./Container-->
     </header>
-	
-	 <div class="container">
-        <!-- ===========================
-        HEADER
-        ============================ -->
-        <div id="header" class="row">
-            <div class="col-sm-2">
-                <img class="propic" src="/dajob/resources/images/joboffer/bappy.jpg" alt="" height="180px">
-            </div>
-            <!-- photo end-->
-
-            <div class="col-sm-10">
-                <div class="cv-title">
-                    <div class="row">
-                        <div class="col-sm-7">
-                            <h1>나상민</h1>
-                        </div>
-                        <div class="col-sm-5 text-right dl-share">
-                            <!-- AddToAny BEGIN -->
-                            <a class="a2a_dd btn btn-default" href=""><span class="fa fa-download"> 연락하기</a>
-                            <script type="text/javascript">
-                                var a2a_config = a2a_config || {};
-                                a2a_config.linkname = "Minimal CV by EvenFly";
-                                a2a_config.num_services = 6;
-                                a2a_config.prioritize = ["facebook", "twitter", "google_plus", "linkedin", "pinterest", "email"];
-                            </script>
-                            <script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
-                            <!-- AddToAny END -->
-
-                            <a class="btn btn-success" href=""></span><span class="fa fa-share "></span> 뒤로가기</a>
-                        </div>
-                    </div>
-                    <h2>UI/UX Designer</h2>
-                </div><!-- Title end-->
-
-                <!-- ===========================
-                SOCIAL & CONTACT
-                ============================ -->
-                <div class="row">
-                    <div class="col-sm-4">
-                        <ul class="list-unstyled">
-                            <li><a href=""><span class="social fa fa-home"></span>EvenFly.com</a>
-                            </li>
-                            <li><a href=""><span class="social fa fa-skype"></span>+88 0123 45678</a>
-                            </li>
-                            <li><a href="mailto:support@evenfly.com"><span class="social fa fa-envelope-o"></span>me@mail.com</a>
-                            </li>
-                        </ul>
-                    </div><!-- social 1st col end-->
-
-                    <div class="col-sm-4">
-                        <ul class="list-unstyled">
-                            <li><a href=""><span class="social fa fa-facebook"></span>Facebook</a>
-                            </li>
-                            <li><a href=""><span class="social fa fa-twitter"></span>Twitter</a>
-                            </li>
-                            <li><a href=""><span class="social fa fa-linkedin"></span>Linkedin</a>
-                            </li>
-                        </ul>
-                    </div><!-- social 2nd col end-->
-
-                    <div class="col-sm-4">
-                        <ul class="list-unstyled">
-                            <li><a href=""><span class="social fa fa-behance"></span>Behance</a>
-                            </li>
-                            <li><a href=""><span class="social fa fa-dribbble"></span>Dribbble</a>
-                            </li>
-                            <li><a href=""><span class="social fa fa-instagram"></span>Instagram</a>
-                            </li>
-                        </ul>
-                    </div><!-- social 3rd col end-->
-                </div><!-- header social end-->
-            </div><!-- header right end-->
-        </div><!-- header end-->
-
-        <hr class="firsthr">
-
-        <!-- ===========================
-        BODY LEFT PART
-        ============================ -->
-        <div class="col-md-8 mainleft">
-            <div id="statement" class="row mobmid">
-                <div class="col-sm-1">
-                    <span class="secicon fa fa-user"></span>
-                </div><!--icon end-->
-
-                <div class="col-sm-11">
-                    <h3>Personal statement </h3>
-                    <p>Hi, I am Bappy from Bangladesh.Adipiscing elit. Nullam dapibus vehicula condimentum. Curabitur elit enim, accumsan vitae tristique ut, mollis at orci. Fusce cursus interdum neque nec aliquam. Proin turpis leo, laoreet non ultricies non, dictum nec nulla. Duis vitae nisi eu odio Adipiscing elit. Nullam dapibus vehicula condimentum. Curabitur elit enim, accumsan.</p>
-
-                    <p>Consectetur adipisicing elit. Hic labore, unde, ratione, itaque ducimus provident error similique qui, recusandae nam dignissimos autem. Sequi quas quis non, odit assumenda similique neque.</p>
-
-                    <p class="signature">TowkirAhmed</p>
-                </div><!--info end-->
-            </div><!--personal statement end-->
-
-            <hr>
-
-            <div id="education" class="row mobmid">
-                <div class="col-sm-1">
-                    <span class="secicon fa fa-graduation-cap"></span>
-                </div><!--icon end-->
-
-                <div class="col-sm-11">
-                    <h3>Education &amp; Certification</h3>
-
-                    <div class="row">
-                        <div class="col-md-9">
-                            <h4>MSc in Design &amp; Fine Art</h4>
-                            <p class="sub"><a href="">Ideal Institute of Science and Technology</a>
-                            </p>
-                            <p>Studying all aspect of Graphic Design Including Advertising Design, Branding, Copy Exhibition Design, Ilustration, Information Design, Packaging Design and Website Design</p>
-                        </div>
-
-                        <div class="year col-md-3">
-                            <p>2009-2011</p>
-                        </div>
-                    </div><!--Education & Certification 1 end-->
-                    
-                    <hr>
-                    
-                    <div class="row">
-                        <div class="col-md-9">
-                            <h4>BSc in Graphic Design</h4>
-                            <p class="sub"><a href="">Ideal Institute of Science and Technology</a>
-                            </p>
-                            <p>Studying all aspect of Graphic Design Including Advertising Design, Branding, Copy Exhibition Design, Ilustration, Information Design, Packaging Design and Website Design</p>
-                        </div>
-
-                        <div class="year col-md-3">
-                            <p>2006-2009</p>
-                        </div>
-                    </div><!--Education & Certification 2 end-->
-
-                    <hr>
-
-                    <div class="row">
-                        <div class="col-md-9">
-                            <h4>Diploma in Graphic Design</h4>
-                            <p class="sub"><a href="">Ideal Institute of Science and Technology</a>
-                            </p>
-                            <p>Studying all aspect of Graphic Design Including Advertising Design, Branding, Copy Exhibition Design, Ilustration, Information Design, Packaging Design and Website Design</p>
-                        </div>
-
-                        <div class="year col-md-3">
-                            <p>2003-2006</p>
-                        </div>
-                    </div><!--Education & Certification 3 end-->
-                </div>
-            </div><!--Education & Certifications end-->
-            
-            <hr>
-
-            <!-- ===========================
-            JOB EXPERIENCES
-            ============================ -->
-            <div id="job" class="row mobmid">
-                <div class="col-sm-1">
-                    <span class="secicon fa fa-briefcase"></span>
-                </div><!--icon end-->
-
-                <div class="col-sm-11">
-                    <h3>Job Experiences</h3>
-
-                    <div class="row">
-                        <div class="col-md-9">
-                            <h4>Lead Graphic Designer</h4>
-                            <p class="sub"><a href="">Lifeview Media Ltd.</a>
-                            </p>
-                            <p>Adipiscing elit. Nullam dapibus vehicula condimentum. Curabitur elit enim, accumsan vitae tristique ut, mollis at orci. Fusce cursus interdum neque nec aliquam. Proin turpis leo, laoreet non ultricies non, dictum nec nulla.</p>
-                        </div>
-
-                        <div class="year col-md-3">
-                            <p>2008 - present</p>
-                        </div>
-                    </div><!--Job 1 end-->
-                    
-                    <hr>
-                    
-                    <div class="row">
-                        <div class="col-md-9">
-                            <h4>Sr. Graphic Designer</h4>
-                            <p class="sub"><a href="">Softech solution ltd.</a>
-                            </p>
-                            <p>Studying all aspect of Graphic Design Including Advertising Design, Branding, Copy Exhibition Design, Ilustration, Information Design, Packaging Design and Website Design</p>
-                        </div>
-
-                        <div class="year col-md-3">
-                            <p>2006-2008</p>
-                        </div>
-                    </div><!--Job 2 end-->
-                    
-                    <hr>
-                    
-                       <div class="row">
-                        <div class="col-md-9">
-                            <h4>Jr. Graphic Designer</h4>
-                            <p class="sub"><a href="">TwinTwin Design Solution</a>
-                            </p>
-                            <p>Studying all aspect of Graphic Design Including Advertising Design, Branding, Copy Exhibition Design, Ilustration, Information Design, Packaging Design and Website Design</p>
-                        </div>
-
-                        <div class="year col-md-3">
-                            <p>2003-2006</p>
-                        </div>
-                    </div><!--Job 3 end-->
-                </div><!--Job experiences end-->
-            </div><!--Job experiences end-->
-        </div><!--left end-->
-        
-        <!-- ===========================
-        SIDEBAR
-        =========================== -->
-        <div class="col-md-4 mainright">
-            <div class="row">
-                <div class="col-sm-1 col-md-2 mobmid">
-                    <span class="secicon fa fa-magic"></span>
-                </div><!--icon end-->
-
-                <div class="col-sm-11 col-md-10">
-                    <h3 class="mobmid">Technical skills </h3>
-
-                    <p>Photoshop</p>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100" style="width: 65%">
-                            <span class="sr-only">65% Complete (success)</span>
-                        </div>
-                    </div><!--skill end-->
+    <div class="container clearfix" style="width:70%;">
+    <h1><div id="footer"></div></h1>
+    <table class="table table-bordered">
+	  <thead>
+	    <tr>
+	      <th>
+		      <div class="col-lg-12 col-md-12 col-sm-12" id="local">
+			    <video
+			     width="100%" height="100%" id="localVideo" autoplay="autoplay" style="opacity: 0;
+			     -webkit-transition-property: opacity;
+			     -webkit-transition-duration: 2s;">
+			    </video>
+			  </div>
+		  </th>
+	      <th>
+	      	<div class="col-lg-12 col-md-12 col-sm-12" id="remote">
+			    <video width="100%" height="100%" id="remoteVideo" autoplay="autoplay"
+			     style="opacity: 0;
+			     -webkit-transition-property: opacity;
+			     -webkit-transition-duration: 2s;">
+			    </video>
+		    </div>
+	      </th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr>
+	    <c:if test="${member.member_type_code eq 'U'}">
+	      <td align="center">${member.member_name}</td>
+	         <c:forEach var="comp" items="${interviewname}">
+		        <c:if test="${interview.interviewer eq comp.member_id}">
+		        <td align="center">${comp.company_name}</td>
+		        </c:if>
+        	</c:forEach>
+	    </c:if>
+	    <c:if test="${member.member_type_code eq 'C'}">
+	      <td align="center">${interview.interviewee}</td>
+	      <td align="center">${interview.interviewer}</td>
+	    </c:if>  
+	    </tr>
+	  </tbody>
+    </table>
+ 
+ 	<button id="join">join</button>
+</div>
+ 
 
 
-                    <p>Illustrator</p>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 85%">
-                            <span class="sr-only">85% Complete</span>
-                        </div>
-                    </div><!--skill end-->
-
-                    <p>InDesign</p>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
-                            <span class="sr-only">60% Complete (warning)</span>
-                        </div>
-                    </div><!--skill end-->
-
-                    <p>Flash</p>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" style="width: 30%">
-                            <span class="sr-only">30% Complete (danger)</span>
-                        </div>
-                    </div><!--skill end-->
-                </div><!--info end-->
-            </div><!--tech skills end-->
-            
-            <hr>
-
-            <div class="row mobmid">
-                <div class="col-sm-1 col-md-2">
-                    <span class="secicon fa fa-trophy"></span>
-                </div><!--icon end-->
-
-                <div class="col-sm-11 col-md-10 ">
-                    <h3>Awards</h3>
-
-                    <div class="award">
-                        <h4>Best Designer 2012</h4>
-                        <p class="sub"><a href="">Life View Media Ltd.</a></p>
-                        <p>Studying all aspect of Graphic Design Including Advertising Design, Branding, Copy Exhibition Design, Ilustration.</p>
-                    </div>
-                    <!--1st award end-->
-
-                    <div class="award">
-                        <h4>Best Designer 2011</h4>
-                        <p class="sub"><a href="">Alexa Design Solution</a></p>
-                        <p>Studying all aspect of Graphic Design Including Advertising Design, Branding, Copy Exhibition Design, Ilustration, Information Design, Packaging Design and Website Design</p>
-                    </div><!--1st award end-->
-                </div><!--awards end-->
-
-            </div>
-            
-            <hr>
-
-            <div class="row ">
-                <div class="col-sm-1 col-md-2 mobmid">
-                    <span class="secicon fa fa-quote-left"></span>
-                </div><!--icon end-->
-
-                <div class="col-sm-11 col-md-10 testimonials">
-                    <h3 class="mobmid">Testimonials </h3>
-
-                    <div class="row">
-                        <blockquote>
-                            <p>Sit amet, consectetur adipisicing elit. Fuga quidem ipsum maiores necessitatibus sint, porro temporibus labore, amet officia unde libero eligendi? Porro dolorum itaque, facere harum amet, rem libero.</p>
-                        </blockquote>
-                        <img src="/dajob/resources/images/joboffer/mushfiq.jpg" alt="">
-                        <h4>Mushfiqul Islam</h4>
-                        <p>The UX Votch</p>
-                    </div><!--1st testimonial end-->
-
-                    <div class="row">
-                        <blockquote>
-                            <p>Consectetur adipisicing elit. Fuga quidem ipsum maiores necessitatibus sint, porro temporibus labore, unde libero eligendi? Porro dolorum itaque, facere harum amet, rem libero.</p>
-                        </blockquote>
-                        <img src="/dajob/resources/images/joboffer/siblu.jpg" alt="">
-                        <h4>E.A. Siblu</h4>
-                        <p>The Jatir Vobisshot</p>
-                    </div><!--2nd testimonial end-->
-
-                    <div class="row">
-                        <blockquote>
-                            <p>Fuga quidem ipsum maiores necessitatibus sint, porro temporibus labore, amet officia unde libero eligendi? Porro dolorum itaque, facere harum amet, rem libero.</p>
-                        </blockquote>
-                        <img src="/dajob/resources/images/joboffer/nasir.jpg" alt="">
-                        <h4>Nasir Uddin</h4>
-                        <p>The Cute Huzur</p>
-                    </div><!--3rd testimonial end-->
-                </div><!--testimonials end-->
-            </div><!--tech skills end-->
-        </div><!--right end-->
-    </div><!--container end-->
 
 	
 	<!--start footer-->
