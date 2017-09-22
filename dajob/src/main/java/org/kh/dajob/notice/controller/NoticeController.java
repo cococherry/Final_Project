@@ -1,14 +1,16 @@
 package org.kh.dajob.notice.controller;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.kh.dajob.member.controller.MemberController;
 import org.kh.dajob.member.model.service.MemberService;
 import org.kh.dajob.notice.model.service.NoticeService;
 import org.kh.dajob.notice.model.vo.Notice;
+import org.kh.dajob.notice.model.vo.NoticeReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +88,7 @@ public class NoticeController {
 			currentPage = Integer.parseInt(request.getParameter("page"));
 		//System.out.println(noticeService.selectOne(request.getParameter("notice_no")));
 		model.addAttribute("notice",noticeService.selectOne(notice_no));
-		//model.addAttribute("mlist",memberService.selectMemberAll());
+		model.addAttribute("mlist",memberService.selectMemberAll());
 		model.addAttribute("noticeReply",noticeService.selectReplyList(notice_no));
 		model.addAttribute("currentPage",currentPage);
 		return "notice/noticeDetailView";
@@ -96,7 +98,7 @@ public class NoticeController {
 	public ModelAndView noticeInsert(Notice n, ModelAndView model){
 		logger.info("noticeInsert() call...");
 		//페이지 값 처리용
-		System.out.println(n);
+		//System.out.println(n);
 		int result = noticeService.insertNotice(n);
 		if(result > 0) {
 			model.setViewName("redirect:nlist.do");
@@ -105,6 +107,39 @@ public class NoticeController {
 			model.setViewName("404-page");
 		}
 		return model;
+	}
+
+	@RequestMapping(value = "nrinsert.do", method = RequestMethod.POST)
+	public ModelAndView noticeReplyInsert(@RequestParam("notice_no") String notice_no, NoticeReply np, ModelAndView model){
+		logger.info("noticeReplyInsert() call...");
+		//페이지 값 처리용
+		//System.out.println(np);
+		int result = noticeService.insertNoticeReply(np);
+		if(result > 0) {
+			model.addObject("notice_no", notice_no);
+			model.setViewName("redirect:ndetail.do");
+		} else {
+			model.addObject("msg", "공지사항 댓글 등록 실패!");
+			model.setViewName("404-page");
+		}
+		return model;
+	}
+	
+	@RequestMapping(value = "nrpinsert.do", method = RequestMethod.POST)
+	public void noticeReplyInsert(NoticeReply np, HttpServletResponse response) throws IOException{
+		logger.info("noticeReplyInsert() call...");
+		//페이지 값 처리용
+		//System.out.println(np);
+		int result = noticeService.insertNoticeReply(np);
+		String notice_repno = noticeService.selectReplyLast(np.getNotice_rep_writer());
+		PrintWriter pw = response.getWriter();
+		if(result > 0) {
+			pw.write(notice_repno);
+			pw.flush();
+		} else {
+			pw.write("fail");
+			pw.flush();
+		}
 	}
 	
 	@RequestMapping(value = "nupdateView.do", produces = "text/plain;charset=UTF-8")
@@ -135,6 +170,19 @@ public class NoticeController {
 		}
 		return mv;
 	}
+	@RequestMapping(value = "nrupdate.do", produces = "text/plain;charset=UTF-8")
+	public void noticeReplyUpdate(NoticeReply np, HttpServletResponse response) throws IOException{
+		logger.info("noticeReplyUpdate() call...");
+		int result = noticeService.updateNoticeReply(np);
+		PrintWriter pw = response.getWriter();
+		if(result > 0) {
+			pw.write("success");
+			pw.flush();
+		} else {
+			pw.write("fail");
+			pw.flush();
+		}
+	}
 	
 	@RequestMapping(value = "ndelete.do", produces = "text/plain;charset=UTF-8")
 	public ModelAndView noticeDelete(@RequestParam("notice_no") String notice_no, ModelAndView mv) throws IOException{
@@ -146,7 +194,22 @@ public class NoticeController {
 			mv.addObject("msg", "공지사항 삭제 에러!!");
 			mv.setViewName("404-page");
 		}
-		
 		return mv;
+	}
+		
+	@RequestMapping(value = "nrdelete.do", produces = "text/plain;charset=UTF-8")
+	public void noticeReplyDelete(@RequestParam("notice_no") String notice_no, @RequestParam("notice_repno") String notice_repno, HttpServletResponse response) throws IOException{
+		logger.info("noticeReplyDelete() call...");
+		System.out.println(notice_repno);
+		int result = noticeService.deleteNoticeReply(notice_repno);
+		PrintWriter pw = response.getWriter();
+		if(result > 0) {
+			pw.write("success");
+			pw.flush();
+		} else {
+			pw.write("fail");
+			pw.flush();
+		}
+		pw.close();
 	}
 }

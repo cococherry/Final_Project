@@ -38,5 +38,11 @@
 	<select id="selectWorkhere" parameterType="string" resultType="Workhere" resultMap="resultWorkhere">
 		select * FROM VW_WORKHERE where work_no = #{WORK_NO}
 	</select>
-
+	
+	<select id="getListCount" resultType="_int">
+		SELECT COUNT(*) FROM VW_WORKHERE
+	</select>
+	<delete id="deleteWorkhere" parameterType="string">
+		DELETE FROM VW_WORKHERE WHERE WORK_NO = #{work_no}
+	</delete>
 </mapper>

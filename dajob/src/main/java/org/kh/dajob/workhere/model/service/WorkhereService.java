@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 public interface WorkhereService {
 
-	ArrayList<Workhere> selectWorkhereList();
+	ArrayList<Workhere> selectWorkhereList(int currentPage, int limit);
 	Workhere selectWorkhere(String no);
+	int getListCount();
+	int deleteWorkhere(String no);
 }

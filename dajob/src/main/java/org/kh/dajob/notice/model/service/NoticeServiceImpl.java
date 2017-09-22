@@ -73,4 +73,9 @@ public class NoticeServiceImpl implements NoticeService {
 	public int getListCount() {
 		return noticeDao.getListCount();
 	}
+
+	@Override
+	public String selectReplyLast(String notice_rep_writer) {
+		return noticeDao.selectReplyLast(notice_rep_writer);
+	}
 }

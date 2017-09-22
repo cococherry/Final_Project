@@ -22,6 +22,10 @@
     <link rel="stylesheet" href="<c:url value='/resources/css/animate.css'/>"/>
 	<c:set var="workherelist" value="${workherelist}"/>
 	<c:set var="comtype" value="${comtype}"/>
+	<c:set var="list" value="${nlist}"/>
+	<c:set var="curPage" value="${currentPage}"/>
+	<c:set var="max" value="${maxPage}"/>
+	<c:set var="listCnt" value="${listCount}"/>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -58,7 +62,13 @@
         </div> <!--./Container-->
     </header>
 	<div class="container">
-  <h2>${company.company_name}</h2>      
+  <h2>${company.company_name}</h2>   
+  <form method="get" id="site-searchform" action="${ntitle}" style="padding-bottom: 30px;margin-bottom: 30px;">
+					<div>
+						<input class="input-text" name="s" id="s" placeholder="Enter Search keywords..." type="search" />
+						<input id="searchsubmit" value="Search" type="submit" />
+					</div>
+				</form> 
   <table class="table table-hover">
     <thead>
       <tr>
@@ -89,6 +99,43 @@
         <td>${workherelist.work_enddate }</td>
       </tr>
       </c:forEach>
+      <tr>
+							<td colspan="6" align="center"> 
+							<ul class="pagination pull-center mrgt-0">
+                            <c:if test="${curPage eq 1}">
+                            <li class="active"><a href="#">&laquo;</a></li>
+                            </c:if><c:if test="${curPage ne 1}">
+                            <c:url var="workhereLt" value="/jobList.do">
+                            	<c:param name="page" value="${curPage - 1}"/>
+                            </c:url>
+                            <li><a href="${workhereLt}">&laquo;</a></li>
+                            </c:if>
+                            <c:forEach var="i" begin="1" end="${max}">
+                            <c:if test="${i eq curPage}">
+                            	<li class="active"><a href="#">${i}</a></li>
+                            </c:if>
+                            <c:if test="${i ne curPage}">
+                            <c:url var="wlistPage" value="/jobList.do">
+                            	<c:param name="page" value="${i}"/>
+                            </c:url>
+                            	<li><a href="${wlistPage}">${i}</a></li>
+                            </c:if>
+                            </c:forEach>
+                            <c:if test="${curPage eq max}">
+                            <li class="active"><a href="#">&raquo;</a></li>
+                            </c:if><c:if test="${curPage ne max}">
+                            <c:url var="workhereRt" value="/jobList.do">
+                            	<c:param name="page" value="${curPage + 1}"/>
+                            </c:url>
+                            <li><a href="${workhereRt}">&raquo;</a></li>
+                            </c:if>
+                            <c:if test="${member.member_type_code eq 'A'}">
+                            &nbsp;&nbsp; &nbsp;
+                            <button class="btn btn-primary" id="insertBtn" type="button" onclick="javascript:location.href='ninsertView.do';">글쓰기</button>
+                            </c:if>
+                        </ul>
+							</td>
+						</tr>
     </tbody>
   </table>
 </div>

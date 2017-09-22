@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service("memberService")
 public class MemberServiceImpl implements MemberService{
 	@Autowired
-	// �쓽議댁꽦 二쇱엯 : Dependancy Injection
+	// 의존성 주입 : Dependancy Injection
 	private MemberDao memberDao;
 	
 	public MemberServiceImpl(){}
@@ -23,6 +23,11 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public Member loginMember(Member m){
 		return memberDao.selectMember(m);
+	}
+	
+	@Override
+	public ArrayList<Member> selectMemberAll() {
+		return memberDao.selectMemberAll();
 	}
 
 	@Override
@@ -40,15 +45,6 @@ public class MemberServiceImpl implements MemberService{
 		return memberDao.selectCompanyList();
 	}
 	
-	@Override
-	public ArrayList<Company> selectCompanyAll() {
-		return memberDao.selectCompanyAll();
-	}
-	
-	@Override
-	public ArrayList<User> selectUserAll(){
-		return memberDao.selectUserAll();
-	}
 	@Override
 	public int checkIdDup(String id) {
 		return memberDao.checkIdDup(id);
@@ -72,6 +68,16 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public int updateMember(Member m) {
 		return memberDao.updateMember(m);
+	}
+
+	@Override
+	public int updateUser(User user) {
+		return memberDao.updateUser(user);
+	}
+
+	@Override
+	public int updateCompany(Company company) {
+		return memberDao.updateCompany(company);
 	}
 
 	@Override

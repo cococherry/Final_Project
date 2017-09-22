@@ -29,4 +29,6 @@ public interface NoticeService {
 	int deleteNoticeReply(String notice_repno);
 
 	int getListCount();
+
+	String selectReplyLast(String notice_rep_writer);
 }

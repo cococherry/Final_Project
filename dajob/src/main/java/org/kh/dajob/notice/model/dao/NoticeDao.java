@@ -42,7 +42,7 @@ public class NoticeDao {
 	}
 	
 	public int insertNoticeReply(NoticeReply np){
-		return 0;
+		return sqlSession.insert("Notice.insertNoticeReply", np);
 	}
 	
 	public int updateNotice(Notice n){
@@ -50,7 +50,7 @@ public class NoticeDao {
 	}
 	
 	public int updateNoticeReply(NoticeReply np){
-		return 0;
+		return sqlSession.update("Notice.updateNoticeReply", np);
 	}
 	
 	public int deleteNotice(String notice_no){
@@ -58,10 +58,14 @@ public class NoticeDao {
 	}
 	
 	public int deleteNoticeReply(String notice_repno){
-		return 0;
+		return sqlSession.delete("Notice.deleteNoticeReply",notice_repno);
 	}
 
 	public int getListCount() {
 		return sqlSession.selectOne("Notice.getListCount");
+	}
+
+	public String selectReplyLast(String notice_rep_writer) {
+		return sqlSession.selectOne("Notice.getLastReply",notice_rep_writer);
 	}
 }

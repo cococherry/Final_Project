@@ -11,11 +11,9 @@ import org.kh.dajob.workboard.model.vo.WorkBoard;
 public interface MemberService {
 	Member loginMember(Member m);
 	
+	ArrayList<Member> selectMemberAll();
+	
 	ArrayList<CompanyType> selectCompanyList();
-	
-	ArrayList<Company> selectCompanyAll();
-	
-	ArrayList<User> selectUserAll();
 	
 	User selectUser(Member m);
 	
@@ -30,12 +28,14 @@ public interface MemberService {
 	int insertCompany(Company c);
 
 	int updateMember(Member m);
+	
+	int updateUser(User user);
+	
+	int updateCompany(Company company);
 
 	int deleteMember(String id);
 	
 	ArrayList<WorkBoard> likeCompList(String memberId, int page);
 
 	int getListCount(String memberId);
-	
-	
 }

@@ -85,15 +85,13 @@ table tr {
 								<c:url var="ndel" value="/ndelete.do">
 									<c:param name="notice_no" value="${notice.notice_no}"/>
 								</c:url>
+								<c:if test="${member.member_type_code eq 'A'}">
 								<button class="btn btn-primary btn-sm" onclick="location.href='${nupView}';">수정하기</button>
 								&nbsp;&nbsp;&nbsp;
 								<button class="btn btn-primary btn-sm" onclick="location.href='${ndel}';">삭제하기</button>
+								</c:if>
 								<br>
 								<font size="3">작성일 : ${notice.notice_date}</font>
-								<c:if test="${member.member_type_code eq 'A'}">
-								
-							</p>
-						</c:if>
 						</span>
 							</h4>
 						</div>
@@ -131,60 +129,73 @@ table tr {
 									<c:forEach var="nrep" items="${noticeReply}">
 										<c:if test="${nrep.notice_rep_level eq 0}">
 											<li class="comment">
-												<div class="avatar"><img alt="" src="${pageContext.request.contextPath}/resources/images/blog/avatar_2.png" class="avatar"></div>
+											<c:forEach var="mem" items="${mlist}">
+												<c:if test="${nrep.notice_rep_writer eq mem.member_id}">
+												<div class="avatar"><img alt="" src="${pageContext.request.contextPath}/resources/images/userImage/${mem.member_profile_img}" class="avatar"></div>
 												<div class="comment-container">
 													<h4 class="comment-author writer_ori">
-														<a href="#">${nrep.notice_rep_writer}</a>
+														<a href="#">${mem.member_name}</a>
 													</h4>
 													<div class="comment-meta">
 														<a href="#" class="comment-date link-style1">${nrep.notice_rep_date}</a>
+														<input class="repno" type="hidden" value="${nrep.notice_repno}">
 														<c:if test="${member.member_id eq nrep.notice_rep_writer}">
 														<a class="comment-reply-link link-style3 confirm" style="right:140px; display: none;" href='javascript:void(0);' onclick="repUpConfirm(this);">수정 완료</a>
 														<a class="comment-reply-link link-style3 reUpdate" style="right:80px;" href='javascript:void(0);' onclick="repUp(this);">댓글 수정</a>
 														<a class="comment-reply-link link-style3" href='javascript:void(0);' onclick="repDel(this);">댓글 삭제</a>
 														</c:if>
 														<c:if test="${member.member_id ne nrep.notice_rep_writer}">
-														<a class="comment-reply-link link-style3" href="#">Reply &raquo;</a>
+														<a class="comment-reply-link link-style3 replyBtn" href="#_self">Reply &raquo;</a>
 														</c:if>
 													</div>
 													<div class="comment-body">
 														<p>${nrep.notice_rep_content}</p>
 													</div>
-												</div> <c:forEach var="nrepLv1" items="${noticeReply}">
+												</div> </c:if> </c:forEach> <c:forEach var="nrepLv1" items="${noticeReply}">
 													<c:if
 														test="${(nrepLv1.notice_rep_level eq 1) and (nrepLv1.notice_rep_ref eq nrep.notice_repno)}">
 														<ul class="children">
 															<li class="comment">
-																<div class="avatar"><img alt="" src="${pageContext.request.contextPath}/resources/images/blog/avatar_2.png" class="avatar"></div>
+															<c:forEach var="mem1" items="${mlist}">
+																<c:if test="${nrepLv1.notice_rep_writer eq mem1.member_id}">
+																<div class="avatar"><img alt="" src="${pageContext.request.contextPath}/resources/images/userImage/${mem1.member_profile_img}" class="avatar"></div>
 																<div class="comment-container">
 																	<h4 class="comment-author writer_ref">
-																		<a href="#">${nrepLv1.notice_rep_writer}</a>
+																		<a href="#">${mem1.member_name}</a>
+																		<%-- <a href="#">${nrepLv1.notice_rep_writer}</a> --%>
 																	</h4>
 																	<div class="comment-meta">
+																		<a href="#" class="comment-date link-style1">${nrepLv1.notice_rep_date}</a>
+																		<input class="repno" type="hidden" value="${nrepLv1.notice_repno}">
+																		<input class="level" type="hidden" value="1">
 																		<c:if test="${member.member_id eq nrepLv1.notice_rep_writer}">
 																		<a class="comment-reply-link link-style3 confirm" style="right:140px; display: none;" href='javascript:void(0);' onclick="repUpConfirm(this);">수정 완료</a>
 																		<a class="comment-reply-link link-style3 reUpdate" style="right:80px;" href='javascript:void(0);' onclick="repUp(this);">댓글 수정</a>
 																		<a class="comment-reply-link link-style3" href='javascript:void(0);' onclick="repDel(this);">댓글 삭제</a>
 																		</c:if>
 																		<c:if test="${member.member_id ne nrepLv1.notice_rep_writer}">
-																		<a class="comment-reply-link link-style3" href="#">Reply &raquo;</a>
+																		<a class="comment-reply-link link-style3 replyBtn" href="#_self">Reply &raquo;</a>
 																		</c:if>
 																	</div>
 																	<div class="comment-body">
 																		<p>${nrepLv1.notice_rep_content}</p>
 																	</div>
-																</div> <c:forEach var="nrepLv2" items="${noticeReply}">
+																</div> </c:if> </c:forEach> <c:forEach var="nrepLv2" items="${noticeReply}">
 																	<c:if
 																		test="${(nrepLv2.notice_rep_level eq 2) and (nrepLv2.notice_rep_ref eq nrepLv1.notice_repno)}">
 																		<ul class="children">
 																			<li class="comment">
-																				<div class="avatar"><img alt="" src="${pageContext.request.contextPath}/resources/images/blog/avatar_2.png" class="avatar"></div>
+																				<c:forEach var="mem2" items="${mlist}">
+																				<c:if test="${nrepLv2.notice_rep_writer eq mem2.member_id}">
+																				<div class="avatar"><img alt="" src="${pageContext.request.contextPath}/resources/images/userImage/${mem2.member_profile_img}" class="avatar"></div>
 																				<div class="comment-container">
-																					<h4 class="comment-author writer_ref">
-																						<a href="#">${nrepLv2.notice_rep_writer}</a>
+																					<h4 class="comment-author">
+																						<a href="#">${mem2.member_name}</a>
 																					</h4>
 																					<div class="comment-meta">
 																						<a href="#" class="comment-date link-style1">${nrepLv2.notice_rep_date}</a>
+																						<input class="repno" type="hidden" value="${nrepLv2.notice_repno}">
+																						<input class="level" type="hidden" value="2">
 																						<c:if test="${member.member_id eq nrepLv2.notice_rep_writer}">
 																						<a class="comment-reply-link link-style3 confirm" style="right:140px; display: none;" href='javascript:void(0);' onclick="repUpConfirm(this);">수정 완료</a>
 																						<a class="comment-reply-link link-style3 reUpdate" style="right:80px;" href='javascript:void(0);' onclick="repUp(this);">댓글 수정</a>
@@ -194,7 +205,7 @@ table tr {
 																					<div class="comment-body">
 																						<p>${nrepLv2.notice_rep_content}</p>
 																					</div>
-																				</div>
+																				</div></c:if></c:forEach>
 																			</li>
 																		</ul>
 																	</c:if>
@@ -221,7 +232,12 @@ table tr {
 									<span>Leave a comment</span>
 								</h4>
 							</div>
-							<form>
+							
+							<form action="nrinsert.do" id="commentsForm" method="post">
+							<input type="hidden" name="notice_no" value="${notice.notice_no}">
+							<input type="hidden" id="notice_rep_content" name="notice_rep_content" value="">
+							<input type="hidden" name="notice_rep_writer" value="${member.member_id}">
+							<input type="hidden" name="notice_rep_level" value="0">
 							<div class="comment-box row">
 								<div class="col-sm-12">
 									<p>
@@ -233,7 +249,7 @@ table tr {
 									</p>
 								</div>
 							</div>
-							<a class="btn btn-lg btn-default" href="#">Post Comment</a>
+							<a class="btn btn-lg btn-default" href="javascript:document.getElementById('commentsForm').submit();">Post Comment</a>
 							</form>
 						</c:if>
 						<p align="center">
@@ -252,47 +268,179 @@ table tr {
 	<!--end footer-->
 	
 	<script type="text/javascript">
-        var innerText = null;
+    $('.replyBtn').on('click',function(){
+    	var pDiv = $(this).parent().parent().parent('li');
+    	var child = ' \
+    		<ul class="children"> \
+    			<li class="comment"> \
+    			<div class="avatar"><img alt="" src="${pageContext.request.contextPath}/resources/images/userImage/${member.member_profile_img}" class="avatar"></div> \
+				<div class="comment-container"> \
+    				<h4 class="comment-author writer_ref"> \
+						<a href="#">${member.member_id}</a> \
+					</h4> \
+					<div class="comment-meta"> \
+						<input class="repno" type="hidden" value=""> \
+						<input class="level" type="hidden" value=""> \
+						<a class="comment-reply-link link-style3 reInsert" style="right:80px;" href=\'javascript:void(0);\' onclick="repInsert(this);">댓글 작성</a> \
+						<a class="comment-reply-link link-style3 reCancel" href=\'javascript:void(0);\' onclick="repCancel(this);">취소</a> \
+					</div> \
+					<div class="comment-body"> \
+						<textarea class="insertRep"></textarea> \
+					</div> \
+				</div> \
+			</li> \
+		</ul>';
+		pDiv.append($(child));
+		/* var child2 = ' \
+    		<ul class="children"> \
+			<li class="comment"> \
+			<div class="avatar"><img alt="" src="${pageContext.request.contextPath}/resources/images/blog/avatar_2.png" class="avatar"></div> \
+			<div class="comment-container"> \
+				<h4 class="comment-author writer_ref"> \
+					<a href="#">${member.member_id}</a> \
+				</h4> \
+				<div class="comment-meta"> \
+					<input class="repno" type="hidden" value=""> \
+					<input class="level" type="hidden" value="2"> \
+					<a class="comment-reply-link link-style3 reUpdate" style="right:80px;" href=\'javascript:void(0);\' onclick="repInsert(this);">댓글 작성</a> \
+					<a class="comment-reply-link link-style3 reDelete" href=\'javascript:void(0);\' onclick="repCancel(this);">취소</a> \
+				</div> \
+				<div class="comment-body"> \
+					<textarea class="insertRep"></textarea> \
+				</div> \
+			</div> \
+		</li> \
+	</ul>';
+		var isOrigin = pDiv.find('h4').hasClass('writer_ori');
+		if(isOrigin){
+			pDiv.append($(child1));
+		} else {
+			pDiv.append($(child2));
+		}
+    	 */
+    });
+	function repInsert(event){
+		var level = 0; 
+		var pDiv = $(event).parent().parent();
+		var originReply = $(pDiv).parent().parent().parent().parent();
+		var commentDiv = $(pDiv).find('.comment-body');
+		if($(originReply).find('h4').hasClass('writer_ori')){
+			level = 1;
+		} else {
+			level = 2;
+		}
+
+		$(commentDiv).text($('.insertRep').val());
+		$.ajax({
+			url : "nrpinsert.do",
+			type : "post",
+			data : {
+				notice_no : "<c:out value='${notice.notice_no}'/>",
+				notice_rep_level : level,
+				notice_rep_writer : "<c:out value='${member.member_id}'/>",
+				notice_rep_content : $(commentDiv).text(),
+				notice_rep_ref : $(originReply).find(".repno").val()
+			},
+			dataType : "text",
+			success : function(value) {
+				$(pDiv).find(".repno").val(value);
+				alert("댓글 작성 성공!");
+			},
+			error : function(value) {
+				alert("에러 : " + value);
+			}
+		});
+		
+		var rep = '<a class="comment-reply-link link-style3 confirm" style="right:140px; display: none;" href=\'javascript:void(0);\' onclick="repUpConfirm(this);">수정 완료</a> \
+		<a class="comment-reply-link link-style3 reUpdate" style="right:80px;" href=\'javascript:void(0);\' onclick="repUp(this);">댓글 수정</a> \
+		<a class="comment-reply-link link-style3 reDelete" href=\'javascript:void(0);\' onclick="repDel(this);">댓글 삭제</a>';
+		$(pDiv).find(".reInsert").after(rep);
+		$(pDiv).find(".reInsert").remove();
+		$(pDiv).find(".reCancel").remove();
+	}
+	function repCancel(event){
+		var pUl = $(event).parent().parent().parent().parent();
+		var pLi = $(event).parent().parent().parent();
+		
+		if ($(pUl).children().size() < 2){
+			$(pUl).text("");
+		} else {
+			$(pLi).text("");
+		}
+	}
+	var innerText = null;
 	function repUp(event){
 		var pDiv = $(event).parent().parent().find(".comment-body");
 		var confirmTag = $(event).parent().find(".confirm");
         
 		$(confirmTag).toggle('slow');
 		if($(event).text() == '수정 취소'){
-			$(".comment-body").remove("textarea");
-            $(".comment-body").text(innerText);
+			pDiv.remove("textarea");
+			pDiv.text(innerText);
             $(event).text('댓글 수정');
 		} else {
-            innerText = $(pDiv).text();
-            //console.log(innerText);
+            innerText = $(pDiv).text().trim();
 			$(event).text('수정 취소');
-			$(".comment-body").text("");
-       	 	$(".comment-body").insertAfter("<textarea>"+innerText+"</textarea>");
+			pDiv.text("");
+			pDiv.append("<textarea id='repBox' rows='3'></textarea>");
+			pDiv.children('#repBox').val(innerText);
 		}
 	};
+	$('#comments').on('keyup',function(){
+		 $('#notice_rep_content').val($('#comments').val());
+	});
 	
 	function repUpConfirm(event){
 		var pDiv = $(event).parent().parent();
-		var isOrigin = pDiv.find('h4').hasClass('writer_ori');
+		var pBody = pDiv.find(".comment-body");
 		var updateTag = $(event).parent().find(".reUpdate");
 		$(updateTag).text('댓글 수정');
 		$(event).toggle('slow');
 
-        if(isOrigin){
-			//ajax 실행
-		} else {
-			//ajax 실행
-		}
+        innerText = pBody.children('#repBox').val();
+		pBody.text(innerText);
+		pBody.children('#repBox').remove();
+		
+		$.ajax({
+    		url : "nrupdate.do",
+			type : "post",
+			data : {
+				notice_repno : $(pDiv).find(".repno").val(),
+				notice_rep_content : innerText
+			},
+			dataType : "text",
+			success : function(value) {
+				alert("댓글 수정 성공!");
+			},
+			error : function(value) {
+				alert("에러 : " + value);
+			}
+    	});
 	};
 	
 	function repDel(event){
 		var pDiv = $(event).parent().parent();
-		var isOrigin = pDiv.find('h4').hasClass('writer_ori');
+		/* var isOrigin = pDiv.find('h4').hasClass('writer_ori');
 		if(isOrigin){
-			//ajax 실행
 		} else {
 			//ajax 실행
-		}
+		} */
+		$.ajax({
+			url : "nrdelete.do",
+			type : "post",
+			data : {
+				notice_no : "<c:out value='${notice.notice_no}'/>",
+				notice_repno : $(pDiv).find(".repno").val()
+			},
+			dataType : "text",
+			success : function(value) {
+				alert("댓글 삭제 성공!");
+				pDiv.parent().remove();
+			},
+			error : function(value) {
+				alert("에러 : " + value);
+			}
+		});
 	};
 	</script>
 </body>

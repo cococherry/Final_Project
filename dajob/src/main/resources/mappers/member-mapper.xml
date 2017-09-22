@@ -21,6 +21,10 @@
 		SELECT * FROM MEMBER WHERE MEMBER_ID = #{member_id} AND MEMBER_PASSWORD = #{member_password}
 	</select>
 	
+	<select id="selectMemberAll" resultType="arraylist" resultMap="resultMember">
+		SELECT * FROM MEMBER
+	</select>
+	
 	<select id="checkDupId" parameterType="string" resultType="_int">
 		<!-- config의 typeAlias -->
 		SELECT COUNT(*) FROM MEMBER WHERE MEMBER_ID = #{userid}

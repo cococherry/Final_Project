@@ -23,15 +23,15 @@ public class MemberDao {
 	public Member selectMember(Member m) {		
 		return sqlSession.selectOne("Member.selectMember", m);
 	}
+
+	public ArrayList<Member> selectMemberAll() {
+		return new ArrayList<Member>(sqlSession.selectList("Member.selectMemberAll"));
+	}
 	
 	public User selectUser(Member m) {
 		return sqlSession.selectOne("User.selectUser", m);
 	}
 
-	public ArrayList<Company> selectCompanyAll() {
-		return new ArrayList<Company>(sqlSession.selectList("Company.selectCompanyAll"));
-	}
-	
 	public Company selectCompany(Member m) {
 		return sqlSession.selectOne("Company.selectCompany", m);
 	}
@@ -75,8 +75,12 @@ public class MemberDao {
 		return sqlSession.selectOne("WorkBoard.getListCount", memberId);
 	}
 
-	public ArrayList<User> selectUserAll() {
-		return new ArrayList<User>(sqlSession.selectList("User.selectUserList"));
+	public int updateUser(User user) {
+		return 0;
+	}
+
+	public int updateCompany(Company company) {
+		return 0;
 	}
 }
 

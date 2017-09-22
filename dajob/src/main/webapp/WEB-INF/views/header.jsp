@@ -53,7 +53,7 @@
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="index.do">Home</a></li>
 
-                    <li><a href="#" id="notice">공지사항</a></li>
+                    <li><a href="nlist.do" id="notice">공지사항</a></li>
 
                     <li><a href="#" id="workhere">Work Here</a>
                     	<ul class="dropdown-menu">

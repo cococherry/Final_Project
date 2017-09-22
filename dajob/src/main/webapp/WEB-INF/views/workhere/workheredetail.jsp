@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="<c:url value='/resources/css/animate.css'/>"/>
 	<c:set var="workhere" value="${workhere}"/>
 	<c:set var="skill" value="${skill}"/>
+	<c:set var="member" value="${member}"/>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -65,16 +66,17 @@
         HEADER
         ============================ -->
         <div id="header" class="row">
-            <div class="col-sm-2">
-                <img class="propic" src="/dajob/resources/images/joboffer/bappy.jpg" alt="" height="180px">
-            </div>
-            <!-- photo end-->
 
             <div class="col-lg-10">
                 <div class="cv-title">
                     
                     <h2>${workhere.work_job }</h2>
+                    <c:if test="${member.member_type_code eq 'U' }">
                     <a class="btn btn-success" href=""><span class="glyphicon glyphicon-edit"></span>인터뷰 신청하기</a>
+                	</c:if>
+                	<c:if test="${member.member_type_code eq 'C' }">
+                    <a class="btn btn-success" href=""><span class="glyphicon glyphicon-edit"></span>삭제하기</a>
+                	</c:if>
                 </div><!-- Title end-->
 
             </div><!-- header right end-->

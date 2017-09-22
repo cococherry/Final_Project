@@ -17,11 +17,18 @@ public class WorkhereServiceImpl implements WorkhereService{
 	public WorkhereServiceImpl() {}
 	
 	@Override
-	public ArrayList<Workhere> selectWorkhereList() {
-		return workhereDao.selectWorkhereList();
+	public ArrayList<Workhere> selectWorkhereList(int currentPage, int limit) {
+		return workhereDao.selectWorkhereList(currentPage,limit);
 	}
 	public Workhere selectWorkhere(String no) {
 		return workhereDao.selectWorkhere(no);
 	};
-	
+	@Override
+	public int getListCount() {
+		return workhereDao.getListCount();
+	}
+	@Override
+	public int deleteWorkhere(String no) {
+		return workhereDao.deleteWorkhere(no);
+	};
 }

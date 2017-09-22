@@ -12,15 +12,78 @@
 	</resultMap>
 	
 	<resultMap id="resultNoticeReply" type="NoticeReply">
-		<id property="member_id" column="NOTICE_REPNO" />
-		<result property="member_password" column="NOTICE_NO" />
-		<result property="member_password" column="NOTICE_REP_CONTENT" />
-		<result property="member_password" column="NOTICE_REP_WRITER" />
-		<result property="member_password" column="NOTICE_REP_DATE" />
-		<result property="member_password" column="NOTICE_REP_LEVEL" />
-		<result property="member_password" column="NOTICE_REP_REF" />
+		<id property="notice_repno" column="NOTICE_REPNO" />
+		<result property="notice_no" column="NOTICE_NO" />
+		<result property="notice_rep_content" column="NOTICE_REP_CONTENT" />
+		<result property="notice_rep_writer" column="NOTICE_REP_WRITER" />
+		<result property="notice_rep_date" column="NOTICE_REP_DATE" />
+		<result property="notice_rep_level" column="NOTICE_REP_LEVEL" />
+		<result property="notice_rep_ref" column="NOTICE_REP_REF" />
 	</resultMap>
 	<!--  SEQ_NOTICE  -->
 	<!--  SEQ_NO_REP  -->
+	<select id="selectNoticeList" resultType="arraylist" resultMap="resultNotice">
+		SELECT * FROM NOTICE ORDER BY NOTICE_DATE DESC
+	</select>
+	
+	<select id="selectNoticeTitleList" parameterType="string" resultType="arraylist" resultMap="resultNotice">
+		SELECT * FROM NOTICE WHERE NOTICE_TITLE LIKE '%'|| #{notice_title} ||'%' ORDER BY NOTICE_DATE DESC
+	</select>
+	
+	<select id="selectNoticeReply" parameterType="string" resultType="arraylist" resultMap="resultNoticeReply">
+		SELECT * FROM NOTICE_REPLY WHERE NOTICE_NO = #{notice_no}
+		ORDER BY NOTICE_REP_REF DESC, NOTICE_REP_LEVEL, NOTICE_REP_DATE
+	</select>
+	
+	<select id="getListCount" resultType="_int">
+		SELECT COUNT(*) FROM NOTICE
+	</select>
+	
+	<select id="getLastReply" parameterType="string" resultType="string">
+		SELECT MAX(NOTICE_REPNO) FROM NOTICE_REPLY WHERE NOTICE_REP_WRITER = #{notice_rep_writer}
+	</select>
+	
+	<select id="selectOne" parameterType="string" resultType="Notice" resultMap="resultNotice">
+		SELECT * FROM NOTICE WHERE NOTICE_NO = #{notice_no}
+	</select>
+	
+	<insert id="insertNotice" parameterType="Notice" flushCache="true"
+		statementType="PREPARED" keyProperty="" keyColumn="" useGeneratedKeys="true"
+		timeout="20">
+		INSERT INTO NOTICE VALUES('NO'||TO_CHAR(SYSDATE,'RRMMDDHH24MI')||LPAD(SEQ_NOTICE.NEXTVAL,2,'0'), #{notice_title}, #{notice_content}, SYSDATE)
+	</insert>
 
+	<insert id="insertNoticeReply" parameterType="NoticeReply" flushCache="true"
+		statementType="PREPARED" keyProperty="" keyColumn="" useGeneratedKeys="true"
+		timeout="20">
+		INSERT INTO NOTICE_REPLY VALUES('NP'||TO_CHAR(SYSDATE,'RRMMDDHH24MI')||LPAD(SEQ_NO_REP.NEXTVAL,2,'0'),
+		 #{notice_no}, #{notice_rep_content}, #{notice_rep_writer}, SYSDATE, #{notice_rep_level}, 
+		 <if test="notice_rep_level == 0">
+		 NULL)
+		 </if><if test="notice_rep_level != 0">
+		 #{notice_rep_ref})
+		 </if>
+	</insert>
+	
+	<update id="updateNotice" parameterType="Notice" flushCache="true"
+		statementType="PREPARED" timeout="20">
+		UPDATE NOTICE SET NOTICE_TITLE = #{notice_title}, NOTICE_CONTENT = #{notice_content}
+		WHERE NOTICE_NO = #{notice_no}
+	</update>
+	
+	<update id="updateNoticeReply" parameterType="NoticeReply" flushCache="true"
+		statementType="PREPARED" timeout="20">
+		UPDATE NOTICE_REPLY SET NOTICE_REP_CONTENT = #{notice_rep_content}
+		WHERE NOTICE_REPNO = #{notice_repno}
+	</update>
+
+	<delete id="deleteNotice" parameterType="string" flushCache="true"
+		statementType="PREPARED" timeout="20">
+		DELETE FROM NOTICE WHERE NOTICE_NO = #{notice_no}
+	</delete>
+	
+	<delete id="deleteNoticeReply" parameterType="string" flushCache="true"
+		statementType="PREPARED" timeout="20">
+		DELETE FROM NOTICE_REPLY WHERE NOTICE_REPNO = #{notice_repno}
+	</delete> 
 </mapper>

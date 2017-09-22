@@ -111,8 +111,9 @@
 	<script src="${pageContext.request.contextPath}/resources/api/CKeditor/lang/ko.js"></script>
 	<script>
 	$(function(){
+		CKEDITOR.config.customConfig = '${pageContext.request.contextPath}/resources/api/CKeditor/config.js';
 		CKEDITOR.replace( 'editor', {
-			customConfig: '${pageContext.request.contextPath}/resources/api/CKeditor/config.js',
+			enterMode : 2,
 			height: 200
 		});
 	});
