@@ -74,7 +74,7 @@
 								</c:url>
                     <h2>${workhere.work_job }</h2>
                     <c:if test="${member.member_type_code eq 'U' }">
-                    <a class="btn btn-success" href="interviewInsert.do"><span class="glyphicon glyphicon-edit"></span>인터뷰 신청하기</a>
+                    <a class="btn btn-success" href="interviewInsertView.do"><span class="glyphicon glyphicon-edit"></span>인터뷰 신청하기</a>
                 	</c:if>
                 	<c:if test="${member.member_type_code eq 'C' }">
                     <a class="btn btn-success" href="${wdel}"><span class="glyphicon glyphicon-edit"></span>삭제하기</a>
