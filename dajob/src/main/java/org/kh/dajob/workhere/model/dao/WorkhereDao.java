@@ -30,6 +30,6 @@ public class WorkhereDao {
 	}
 
 	public int deleteWorkhere(String no) {
-		return sqlSession.delete("Workhere.deleteWorkhere");
+		return sqlSession.delete("Workhere.deleteWorkhere",no);
 	}
 }

@@ -62,13 +62,41 @@
         </div> <!--./Container-->
     </header>
 	<div class="container">
-  <h2>${company.company_name}</h2>   
-  <form method="get" id="site-searchform" action="${ntitle}" style="padding-bottom: 30px;margin-bottom: 30px;">
-					<div>
-						<input class="input-text" name="s" id="s" placeholder="Enter Search keywords..." type="search" />
-						<input id="searchsubmit" value="Search" type="submit" />
-					</div>
-				</form> 
+  <h2>${company.company_name}</h2>
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 col-sm-12">
+                        <h2>원하는 직무로 찾아보세요</h2>
+                        <p>내가 원하는 직장을 직무로 찾아보자!</p>
+                        <div class="search-form wow pulse" data-wow-delay="0.8s">
+                            <form action="" class=" form-inline">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Job Key Word">
+                                </div>
+                                <div class="form-group">
+                                    <select name="" id="" class="form-control">
+                                        <option>Select Your City</option>
+                                        <option selected>New york, CA</option>
+                                        <option>New york, CA</option>
+                                        <option>New york, CA</option>
+                                        <option>New york, CA</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <select name="" id="" class="form-control">
+                                        <option>Select Your Category</option>
+                                        <option selected>Graphic Design</option>
+                                        <option>Web Design</option>
+                                        <option>App Design</option>
+                                    </select>
+                                </div>
+                                <input type="submit" class="btn" value="Search">
+
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            
   <table class="table table-hover">
     <thead>
       <tr>

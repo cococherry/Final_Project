@@ -68,7 +68,7 @@
  
     function openChannel() {
         // SDP 정보 교환을 위해, 서버와 연결한다.
-        url = "http://192.168.30.57:4080";
+        url = "ws://192.168.30.57:4080";
         wsock = new WebSocket(url);
  
         wsock.onopen = function() {
@@ -239,7 +239,6 @@
         </div> <!--./Container-->
     </header>
     <div class="container clearfix" style="width:70%;">
-    <h1><div id="footer"></div></h1>
     <table class="table table-bordered">
 	  <thead>
 	    <tr>

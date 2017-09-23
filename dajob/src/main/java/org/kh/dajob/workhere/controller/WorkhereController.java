@@ -10,12 +10,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.kh.dajob.member.model.service.MemberService;
+import org.kh.dajob.notice.model.vo.Notice;
 import org.kh.dajob.workhere.model.service.WorkhereService;
 import org.kh.dajob.workhere.model.vo.Workhere;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import javafx.scene.control.Alert;
 
@@ -75,19 +79,19 @@ public class WorkhereController {
 		return "workhere/workheredetail";
 	}
 	
-	@RequestMapping(value = "workhereDelete.do")
-	public String workhereDelete(HttpServletRequest request,HttpServletResponse response, Model model) throws IOException {
-		String workhere = workhereService.selectWorkhere(request.getParameter("workhere_no")).getWork_no();
-		int result = workhereService.deleteWorkhere(workhere);
-		PrintWriter pw = response.getWriter();
+	@RequestMapping(value = "workhereDelete.do", produces = "text/plain;charset=UTF-8")
+	public ModelAndView workhereDelete(@RequestParam("workhere_no") String workhere_no, ModelAndView mv) throws IOException{
+		int result = workhereService.deleteWorkhere(workhere_no);
+		System.out.println(result);
 		if(result > 0) {
-			pw.write(notice_repno);
-			pw.flush();
+			mv.setViewName("index");
 		} else {
-			pw.write("fail");
-			pw.flush();
+			mv.addObject("msg", "공지사항 삭제 에러!!");
+			mv.setViewName("404-page");
 		}
-		return "index";
+		return mv;
 	}
+	
+	
 	
 }

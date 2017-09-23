@@ -17,16 +17,17 @@
     <link rel="stylesheet" href="<c:url value='/resources/css/style.css'/>">
     <link rel="stylesheet" href="<c:url value='/resources/css/interview/interviewlist.css'/>">
     <link rel="stylesheet" type="text/css" href="<c:url value='/resources/css/style.css'/>" media="screen" data-name="skins">
-
     <link rel="stylesheet" href="<c:url value='/resources/css/font-awesome.css'/>"/>
     <link rel="stylesheet" href="<c:url value='/resources/css/animate.css'/>"/>
-	<c:set var="interviewlist" value="${interviewlist}"/>
+   
+	<link rel="stylesheet" href="<c:url value='/resources/css/calender/bootstrap-datetimepicker.min.css'/>"/>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <c:set var="interview" value="${interview}"/>
     <style>
        #map {
         height: 400px;
@@ -56,75 +57,66 @@
             </div> <!--./row-->
         </div> <!--./Container-->
     </header>
-	<div class="container">
-  <h2>인터뷰 리스트</h2>  
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th>인터뷰 번호</th>
-        <th>회사 이름</th>
-        <th>신청자 아이디</th>
-        <th>면접 상태</th>
-      </tr>
-    </thead>
-    <tbody>
-    	<!-- 유저입장 -->
-   		 <c:forEach var="interviewlist" items="${interviewlist}">
-   		 <c:if test="${member.member_id eq interviewlist.interviewee }">
-      <tr>
-        <td>${interviewlist.interview_no }</td>
-        <td>${interviewlist.company_name}</td>
-        <td>${interviewlist.interviewee}</td>
-        <td>
-        <c:url var="interDetail" value="/interviewDetail.do">
-        	<c:param name="interview_no" value="${interviewlist.interview_no}"/>
-        </c:url>
-        <c:if test="${interviewlist.interview_status eq 'H' }">대기</c:if>
-        <c:if test="${interviewlist.interview_status eq 'E' }"><a href="${interDetail}">입장 가능</a></c:if>
-        <c:if test="${interviewlist.interview_status eq 'Q' }">종료</c:if>
-        </td>
-        
-      </tr>
-      </c:if>
-      </c:forEach>
-      <!-- 회사입장 -->
-      <c:forEach var="interviewcompanylist" items="${interviewlist}">
-   		 <c:if test="${member.member_id eq interviewcompanylist.interviewer }">
-      <tr>
-        <td>${interviewcompanylist.interview_no }</td>
-        <td>${interviewcompanylist.company_name}</td>
-        <td>${interviewcompanylist.interviewee}</td>
-        <td>
-        <c:url var="interDetail" value="/interviewDetail.do">
-        	<c:param name="interview_no" value="${interviewcompanylist.interview_no}"/>
-        </c:url>
-        <c:if test="${interviewcompanylist.interview_status eq 'H' }">대기</c:if>
-        <c:if test="${interviewcompanylist.interview_status eq 'E' }"><a href="${interDetail}">입장 가능</a></c:if>
-        <c:if test="${interviewcompanylist.interview_status eq 'Q' }">종료</c:if>
-        </td>
-        <td>
-         <c:url var="interUpdate" value="/interviewUpdateView.do">
-        	<c:param name="interview_no" value="${interviewcompanylist.interview_no}"/>
-        </c:url>	
-       		<a href="${interUpdate}">수정하기</a>
-       	<c:url var="interDelete" value="/interviewDelete.do">
-        	<c:param name="interview_no" value="${interviewcompanylist.interview_no}"/>
-        </c:url>
-       		<a href="${interDelete}">삭제하기</a>
-       	</td>
-      </tr>
-      </c:if>
-      </c:forEach>
-    </tbody>
-  </table>
+    
+    <div class="container clearfix" style="width:70%;">
+    <table class="table table-bordered">
+	  <thead>
+	    <tr>
+	      <th>
+		      <div class="col-lg-12 col-md-12 col-sm-12" id="local">
+			    <video
+			     width="100%" height="100%" id="localVideo" autoplay="autoplay" style="opacity: 0;
+			     -webkit-transition-property: opacity;
+			     -webkit-transition-duration: 2s;">
+			    </video>
+			  </div>
+		  </th>
+	      <th>
+	      	<div class="col-lg-12 col-md-12 col-sm-12" id="remote">
+			    <video width="100%" height="100%" id="remoteVideo" autoplay="autoplay"
+			     style="opacity: 0;
+			     -webkit-transition-property: opacity;
+			     -webkit-transition-duration: 2s;">
+			    </video>
+		    </div>
+	      </th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr>
+	    <c:if test="${member.member_type_code eq 'U'}">
+	      <td align="center">${member.member_name}</td>
+	         <c:forEach var="comp" items="${interviewname}">
+		        <c:if test="${interview.interviewer eq comp.member_id}">
+		        <td align="center">${comp.company_name}</td>
+		        </c:if>
+        	</c:forEach>
+	    </c:if>
+	    <c:if test="${member.member_type_code eq 'C'}">
+	      <td align="center">${interview.interviewee}</td>
+	      <td align="center">${interview.interviewer}</td>
+	    </c:if>
+	    </tr>
+	  </tbody>
+    </table>
+ 
+ 	<button id="join">join</button>
 </div>
-	
-
-	
+    
+    
 	<!--start footer-->
 	<c:import url="../footer.jsp"/>
 	<!--end footer-->
-
-
+		<script src="${pageContext.request.contextPath}/resources/api/CKeditor/ckeditor.js"></script>
+			<!-- summer note korean language pack -->
+			<script src="${pageContext.request.contextPath}/resources/api/CKeditor/lang/ko.js"></script>
+			<script src="${pageContext.request.contextPath}/resources/api/CKeditor/config.js"></script>
+			<script>
+			CKEDITOR.config.customConfig = '${pageContext.request.contextPath}/resources/api/CKeditor/config.js';
+			CKEDITOR.replace( 'editor1', {
+				filebrowserImageUploadUrl: '${pageContext.request.contextPath}/resources/up',
+				height: 400
+			});
+			</script>
 </body>
 </html>

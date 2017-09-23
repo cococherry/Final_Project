@@ -14,23 +14,33 @@
 		<result property="interview_end_date" column="INTERVIEW_END_DATE" />
 		<result property="interview_status" column="INTERVIEW_STATUS" />
 		<result property="work_no" column="WORK_NO" />
+       <result property="member_id" column="MEMBER_ID" />
+		<result property="company_name" column="COMPANY_NAME" />
+		<result property="company_type" column="COMPANY_TYPE" />
+		<result property="company_staff" column="COMPANY_STAFF" />
+		<result property="company_capital" column="COMPANY_CAPITAL" />
+		<result property="company_code" column="COMPANY_CODE" />
+		<result property="company_tel" column="COMPANY_TEL" />
+		<result property="company_fax" column="COMPANY_FAX" />
+		<result property="company_welfare" column="COMPANY_WELFARE" />
+		<result property="company_date" column="COMPANY_DATE" />
 	</resultMap>
 	
 	
 	<select id="selectInterviewList" resultType="arraylist" resultMap="resultInterview">
-		SELECT * FROM INTERVIEW 
+		SELECT * FROM VW_INTERVIEW 
 	</select>
 	
 	<select id="selectInterviewerList" parameterType="string" resultType="arraylist" resultMap="resultInterview">
-		SELECT * FROM INTERVIEW WHERE INTERVIEWER = #{member_id}
+		SELECT * FROM VW_INTERVIEW WHERE INTERVIEWER = #{member_id}
 	</select>
 	
 	<select id="selectIntervieweeList" parameterType="string" resultType="arraylist" resultMap="resultInterview">
-		SELECT * FROM INTERVIEW WHERE INTERVIEWEE = #{member_id}
+		SELECT * FROM VW_INTERVIEW WHERE INTERVIEWEE = #{member_id}
 	</select>
 	
 	<select id="selectInterview" parameterType="string" resultType="Interview" resultMap="resultInterview">
-		SELECT * FROM INTERVIEW WHERE INTERVIEW_NO = #{interview_no}
+		SELECT * FROM VW_INTERVIEW WHERE INTERVIEW_NO = #{interview_no}
 	</select>
 	
 	<insert id="insertInterview" parameterType="Interview">

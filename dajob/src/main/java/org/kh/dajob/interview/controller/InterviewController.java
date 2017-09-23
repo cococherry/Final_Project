@@ -32,19 +32,13 @@ public class InterviewController {
 	
 	@RequestMapping(value = "interviewList.do")
 	public String interviewList(HttpSession session, Model model) throws IOException {
-		model.addAttribute("company", memberService.selectCompany((Member)session.getAttribute("member")));
 		model.addAttribute("interviewlist", interviewService.selectInterviewList((Member)session.getAttribute("member")));
-		model.addAttribute("interviewname", memberService.selectCompanyAll());
-		model.addAttribute("interviewee", memberService.selectUserAll());
 		return "interview/interviewlist";
 	}
 	
 	@RequestMapping(value = "interviewCompanyList.do")
 	public String interviewCompanyList(HttpSession session, Model model) throws IOException {
-		model.addAttribute("company", memberService.selectCompany((Member)session.getAttribute("member")));
 		model.addAttribute("interviewlist", interviewService.selectInterviewList((Member)session.getAttribute("member")));
-		model.addAttribute("interviewer", memberService.selectCompanyAll());
-		model.addAttribute("interviewee", memberService.selectUserAll());
 		return "interview/interviewcompanylist";
 	}
 	
@@ -58,7 +52,6 @@ public class InterviewController {
 	@RequestMapping(value = "interviewDetail.do")
 	public String interviewDetail(HttpSession session, HttpServletRequest request, Model model) throws IOException {
 		model.addAttribute("interview", interviewService.selectInterview(request.getParameter("interview_no")));
-		model.addAttribute("interviewname", memberService.selectCompanyAll());
 		return "interview/interviewdetail";
 	}
 	

@@ -26,7 +26,8 @@
 		<result property="company_tel" column="COMPANY_TEL" />
 		<result property="company_fax" column="COMPANY_FAX" />
 		<result property="company_welfare" column="COMPANY_WELFARE" />
-		<result property="company_date" column="COMPANY_DATE" />
+		<result property="company_start_date" column="COMPANY_START_DATE" />
+		<result property="company_end_date" column="COMPANY_END_DATE" />
 		
 	</resultMap>
 	

@@ -86,12 +86,8 @@
                             </li>
                             <li><a href="powerlink.do">PowerLink 정보</a></li>
                             <li><a href="#">구직 신청자 리스트</a></li>
-                            <c:if test="${ member.member_type_code == 'U' }">
                             <li><a href="interviewList.do">화상 면접 대기실</a></li>
-                            </c:if>
-                            <c:if test="${member.member_type_code == 'C' }">
-                            <li><a href="interviewCompanyList.do">화상 면접 대기실</a></li>
-                            </c:if>
+                            
                    			</c:if>
                          <!---------/ 기업 회원 메뉴 구성 --------->
                         </ul>
