@@ -27,7 +27,7 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <c:set var="interview" value="${interview}"/>
+    <c:set var="workhere" value="${workhere}"/>
     <style>
        #map {
         height: 400px;
@@ -57,66 +57,67 @@
             </div> <!--./row-->
         </div> <!--./Container-->
     </header>
-    
-    <div class="container clearfix" style="width:70%;">
-    <table class="table table-bordered">
-	  <thead>
-	    <tr>
-	      <th>
-		      <div class="col-lg-12 col-md-12 col-sm-12" id="local">
-			    <video
-			     width="100%" height="100%" id="localVideo" autoplay="autoplay" style="opacity: 0;
-			     -webkit-transition-property: opacity;
-			     -webkit-transition-duration: 2s;">
-			    </video>
-			  </div>
-		  </th>
-	      <th>
-	      	<div class="col-lg-12 col-md-12 col-sm-12" id="remote">
-			    <video width="100%" height="100%" id="remoteVideo" autoplay="autoplay"
-			     style="opacity: 0;
-			     -webkit-transition-property: opacity;
-			     -webkit-transition-duration: 2s;">
-			    </video>
-		    </div>
-	      </th>
-	    </tr>
-	  </thead>
-	  <tbody>
-	    <tr>
-	    <c:if test="${member.member_type_code eq 'U'}">
-	      <td align="center">${member.member_name}</td>
-	         <c:forEach var="comp" items="${interviewname}">
-		        <c:if test="${interview.interviewer eq comp.member_id}">
-		        <td align="center">${comp.company_name}</td>
-		        </c:if>
-        	</c:forEach>
-	    </c:if>
-	    <c:if test="${member.member_type_code eq 'C'}">
-	      <td align="center">${interview.interviewee}</td>
-	      <td align="center">${interview.interviewer}</td>
-	    </c:if>
-	    </tr>
-	  </tbody>
-    </table>
- 
- 	<button id="join">join</button>
-</div>
-    
-    
+	<div>
+        <div class="panel panel-default">
+                <form method="POST" action="interviewInsert.do" >
+                    <div class="panel-body article">
+                        <h4>${workhere.company_name } 인터뷰 신청하기</h4>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                               <div class="row">
+								        <div class="form-group col-md-6 mb-6">
+							                <label for="dtp_input1" class="control-label">시작 시간</label>
+							                <div class="input-group date form_datetime" data-date="2017-10-13T05:25:07Z" data-date-format="yyyy년 MM dd일  p HH:ii" data-link-field="dtp_input1">
+							                    <input class="form-control" size="16" type="text" name="start" readonly>
+							                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+												<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+							                </div>
+											<input type="hidden" id="dtp_input1" value="" /><br/>
+							            </div>
+							 			
+							 			<div class="form-group col-md-6 mb-6">
+							                <label for="dtp_input1" class="control-label">끝나는 시간</label>
+							                <div class="input-group date form_datetime" data-date="2017-10-13T05:25:07Z" data-date-format="yyyy년 MM dd일  p HH:ii" data-link-field="dtp_input1">
+							                    <input class="form-control" size="16" type="text" name="end" readonly>
+							                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+												<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+							                </div>
+											<input type="hidden" id="dtp_input1" value="" /><br/>
+							            </div>
+									  </div>				                                
+                              </div>
+                        </div>
+                        <ul class="pager">
+                            <li>
+                                <input type="submit" class="btn btn-default" value="신청하기">
+                            </li>
+                            </form>
+                            <li>
+                               <button type="button" class="btn btn-default" onclick="javascript:history.go(-1);">취소하기</button>
+                            </li>
+                        </ul>
+                    </div>
+            </div>
+	
+	
 	<!--start footer-->
 	<c:import url="../footer.jsp"/>
 	<!--end footer-->
-		<script src="${pageContext.request.contextPath}/resources/api/CKeditor/ckeditor.js"></script>
-			<!-- summer note korean language pack -->
-			<script src="${pageContext.request.contextPath}/resources/api/CKeditor/lang/ko.js"></script>
-			<script src="${pageContext.request.contextPath}/resources/api/CKeditor/config.js"></script>
-			<script>
-			CKEDITOR.config.customConfig = '${pageContext.request.contextPath}/resources/api/CKeditor/config.js';
-			CKEDITOR.replace( 'editor1', {
-				filebrowserImageUploadUrl: '${pageContext.request.contextPath}/resources/up',
-				height: 400
-			});
-			</script>
+
+		<!-- CALENDER -->
+	<script src="<c:url value='/resources/js/calender/bootstrap-datetimepicker.min.js'/>"></script>
+	<script src="<c:url value='/resources/js/calender/bootstrap-datetimepicker.ko.js'/>"></script>
+	<script type="text/javascript">
+    $('.form_datetime').datetimepicker({
+        language:  'ko',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		forceParse: 0,
+        showMeridian: 1
+    });
+    </script>
 </body>
 </html>
