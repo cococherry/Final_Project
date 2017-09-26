@@ -44,7 +44,7 @@
 	</select>
 	
 	<insert id="insertInterview" parameterType="Interview">
-		INSERT INTO INTERVIEW VALUES(#{interview_no},#{interviewer},#{interviewee},#{interview_question},#{interview_answer},#{interview_start_date},#{interview_end_date},#{interview_status},#{work_no})
+		INSERT INTO INTERVIEW VALUES('IN'||TO_CHAR(SYSDATE,'RRMMDDHH24MI')||LPAD(SEQ_INTERVIEW.NEXTVAL,2,'0'),#{interviewer},#{interviewee},NULL,NULL,#{interview_start_date},#{interview_end_date},'H',#{work_no})
 	</insert>
 	
 	<delete id="deleteInterview" parameterType="string">
@@ -52,7 +52,7 @@
 	</delete>
 	
 	<update id="updateInterview" parameterType="string">
-		UPDATE INTERVIEW SET INTERVIEWER = #{interviewer}, INTERVIEWEE = #{interviewee}, INTERVIEW_QUESTION = #{interview_question}, INTERVIEW_ANSWER = #{interview_answer}, INTERVIEW_START_DATE = #{interview_start_date},INTERVIEW_END_DATE = #{interview_end_date}, INTERVIEW_STATUS = #{interview_status}, WORK_NO = #{work_no}
+		UPDATE INTERVIEW SET INTERVIEW_QUESTION = #{interview_question}, INTERVIEW_START_DATE = #{interview_start_date},INTERVIEW_END_DATE = #{interview_end_date}, INTERVIEW_STATUS = #{interview_status}
 	</update>
 
 </mapper>

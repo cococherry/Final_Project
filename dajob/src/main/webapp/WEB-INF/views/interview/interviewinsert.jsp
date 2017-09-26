@@ -60,6 +60,9 @@
 	<div>
         <div class="panel panel-default">
                 <form method="POST" action="interviewInsert.do" >
+                	<input hidden="true" type="text" value="${workhere.member_id }" name="interviewer">
+                	<input hidden="true" type="text" value="${member.member_id }" name="interviewee">
+                	<input hidden="true" type="text" value="${workhere.work_no }" name="work_no">
                     <div class="panel-body article">
                         <h4>${workhere.company_name } 인터뷰 신청하기</h4>
                         <div class="panel panel-default">

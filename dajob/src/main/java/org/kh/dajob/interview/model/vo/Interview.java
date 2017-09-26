@@ -14,6 +14,23 @@ public class Interview implements Serializable{
 	private Date interview_end_date;
 	private String interview_status;
 	private String work_no;
+	public Interview(String interviewer, String interviewee, Date interview_start_date, Date interview_end_date,
+			String work_no) {
+		super();
+		this.interviewer = interviewer;
+		this.interviewee = interviewee;
+		this.interview_start_date = interview_start_date;
+		this.interview_end_date = interview_end_date;
+		this.work_no = work_no;
+	}
+	public Interview(String interview_question, Date interview_start_date, Date interview_end_date,
+			String interview_status) {
+		super();
+		this.interview_question = interview_question;
+		this.interview_start_date = interview_start_date;
+		this.interview_end_date = interview_end_date;
+		this.interview_status = interview_status;
+	}
 	private String member_id;
 	private String company_name;
 	private String company_type;

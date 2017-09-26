@@ -65,6 +65,7 @@
         <th>회사 이름</th>
         <th>신청자 아이디</th>
         <th>면접 상태</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -105,12 +106,12 @@
         <td>
          <c:url var="interUpdate" value="/interviewUpdateView.do">
         	<c:param name="interview_no" value="${interviewcompanylist.interview_no}"/>
-        </c:url>	
-       		<a href="${interUpdate}">수정하기</a>
+        </c:url>
+        	<button type="button" style="height:20px; font-size:10px; height:50%" class="btn btn-success" onclick="location.href='${interUpdate}'">입력 및 수정</button>
        	<c:url var="interDelete" value="/interviewDelete.do">
         	<c:param name="interview_no" value="${interviewcompanylist.interview_no}"/>
         </c:url>
-       		<a href="${interDelete}">삭제하기</a>
+        	<button type="button" style="height:20px; font-size:10px; height:50%" class="btn btn-danger" onclick="location.href='${interDelete}'">삭제하기</button>
        	</td>
       </tr>
       </c:if>

@@ -61,7 +61,7 @@
     </header>
 	<div>
         <div class="panel panel-default">
-                <form method="POST" action="/made/ninsert" >
+                <form method="POST" action="interviewUpdate.do" >
                     <div class="panel-body article">
                         <h4>화상채팅방 수정하기</h4>
                         <div class="panel panel-default">
@@ -69,13 +69,13 @@
                                <div class="row">
 									    <div class="col-md-4 mb-4">
 									      <label for="validationServer02">면접자 아이디</label>
-									      <input type="text" class="form-control is-valid" id="validationServer02" placeholder="Last name" value="${interview.interviewee }" required>
+									      <input type="text" class="form-control is-valid" id="validationServer02" placeholder="Last name" value="${interview.interviewee }" readonly>
 									    </div>
 									    
 								        <div class="form-group col-md-4 mb-4">
 							                <label for="dtp_input1" class="control-label">시작 시간</label>
 							                <div class="input-group date form_datetime" data-date="1979-09-16T05:25:07Z" data-date-format="yyyy년 MM dd일  p HH:ii" data-link-field="dtp_input1">
-							                    <input class="form-control" size="16" type="text" value="${startdate }" readonly>
+							                    <input class="form-control" size="16" type="text" value="${startdate }" name="">
 							                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
 												<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
 							                </div>
@@ -85,7 +85,7 @@
 							 			<div class="form-group col-md-4 mb-4">
 							                <label for="dtp_input1" class="control-label">끝나는 시간</label>
 							                <div class="input-group date form_datetime" data-date="1979-09-16T05:25:07Z" data-date-format="yyyy년 MM dd일  p HH:ii" data-link-field="dtp_input1">
-							                    <input class="form-control" size="16" type="text" value="${enddate }" readonly>
+							                    <input class="form-control" size="16" type="text" value="${enddate }" name="">
 							                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
 												<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
 							                </div>
