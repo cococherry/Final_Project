@@ -2,6 +2,7 @@ package org.kh.dajob.interview.model.vo;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Interview implements Serializable{
 	private static final long serialVersionUID = 12111111112L;
@@ -10,27 +11,10 @@ public class Interview implements Serializable{
 	private String interviewee;
 	private String interview_question;
 	private String interview_answer;
-	private Date interview_start_date;
-	private Date interview_end_date;
+	private Timestamp interview_start_date;
+	private Timestamp interview_end_date;
 	private String interview_status;
 	private String work_no;
-	public Interview(String interviewer, String interviewee, Date interview_start_date, Date interview_end_date,
-			String work_no) {
-		super();
-		this.interviewer = interviewer;
-		this.interviewee = interviewee;
-		this.interview_start_date = interview_start_date;
-		this.interview_end_date = interview_end_date;
-		this.work_no = work_no;
-	}
-	public Interview(String interview_question, Date interview_start_date, Date interview_end_date,
-			String interview_status) {
-		super();
-		this.interview_question = interview_question;
-		this.interview_start_date = interview_start_date;
-		this.interview_end_date = interview_end_date;
-		this.interview_status = interview_status;
-	}
 	private String member_id;
 	private String company_name;
 	private String company_type;
@@ -42,6 +26,34 @@ public class Interview implements Serializable{
 	private String company_welfare;
 	private Date company_date;
 	public Interview() {}
+	
+	public Interview(String interview_no, String interviewer, String interviewee, String interview_question,
+			String interview_answer, Timestamp interview_start_date, Timestamp interview_end_date,
+			String interview_status, String work_no, String member_id, String company_name, String company_type,
+			String company_staff, String company_capital, String company_code, String company_tel, String company_fax,
+			String company_welfare, Date company_date) {
+		super();
+		this.interview_no = interview_no;
+		this.interviewer = interviewer;
+		this.interviewee = interviewee;
+		this.interview_question = interview_question;
+		this.interview_answer = interview_answer;
+		this.interview_start_date = interview_start_date;
+		this.interview_end_date = interview_end_date;
+		this.interview_status = interview_status;
+		this.work_no = work_no;
+		this.member_id = member_id;
+		this.company_name = company_name;
+		this.company_type = company_type;
+		this.company_staff = company_staff;
+		this.company_capital = company_capital;
+		this.company_code = company_code;
+		this.company_tel = company_tel;
+		this.company_fax = company_fax;
+		this.company_welfare = company_welfare;
+		this.company_date = company_date;
+	}
+	
 	public String getInterview_no() {
 		return interview_no;
 	}
@@ -72,16 +84,16 @@ public class Interview implements Serializable{
 	public void setInterview_answer(String interview_answer) {
 		this.interview_answer = interview_answer;
 	}
-	public Date getInterview_start_date() {
+	public Timestamp getInterview_start_date() {
 		return interview_start_date;
 	}
-	public void setInterview_start_date(Date interview_start_date) {
+	public void setInterview_start_date(Timestamp interview_start_date) {
 		this.interview_start_date = interview_start_date;
 	}
-	public Date getInterview_end_date() {
+	public Timestamp getInterview_end_date() {
 		return interview_end_date;
 	}
-	public void setInterview_end_date(Date interview_end_date) {
+	public void setInterview_end_date(Timestamp interview_end_date) {
 		this.interview_end_date = interview_end_date;
 	}
 	public String getInterview_status() {
@@ -126,6 +138,15 @@ public class Interview implements Serializable{
 	public void setCompany_capital(String company_capital) {
 		this.company_capital = company_capital;
 	}
+	public Interview(String interview_question, Timestamp interview_start_date, Timestamp interview_end_date,
+			String interview_status) {
+		super();
+		this.interview_question = interview_question;
+		this.interview_start_date = interview_start_date;
+		this.interview_end_date = interview_end_date;
+		this.interview_status = interview_status;
+	}
+
 	public String getCompany_code() {
 		return company_code;
 	}
@@ -156,35 +177,7 @@ public class Interview implements Serializable{
 	public void setCompany_date(Date company_date) {
 		this.company_date = company_date;
 	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-	public Interview(String interview_no, String interviewer, String interviewee, String interview_question,
-			String interview_answer, Date interview_start_date, Date interview_end_date, String interview_status,
-			String work_no, String member_id, String company_name, String company_type, String company_staff,
-			String company_capital, String company_code, String company_tel, String company_fax, String company_welfare,
-			Date company_date) {
-		super();
-		this.interview_no = interview_no;
-		this.interviewer = interviewer;
-		this.interviewee = interviewee;
-		this.interview_question = interview_question;
-		this.interview_answer = interview_answer;
-		this.interview_start_date = interview_start_date;
-		this.interview_end_date = interview_end_date;
-		this.interview_status = interview_status;
-		this.work_no = work_no;
-		this.member_id = member_id;
-		this.company_name = company_name;
-		this.company_type = company_type;
-		this.company_staff = company_staff;
-		this.company_capital = company_capital;
-		this.company_code = company_code;
-		this.company_tel = company_tel;
-		this.company_fax = company_fax;
-		this.company_welfare = company_welfare;
-		this.company_date = company_date;
-	}
+	
 	@Override
 	public String toString() {
 		return "Interview [interview_no=" + interview_no + ", interviewer=" + interviewer + ", interviewee="

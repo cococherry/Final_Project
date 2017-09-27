@@ -1,7 +1,7 @@
-/*** Final 데이터 베이스 스크립트 Ver 1.5 ***/
+/*** Final 데이터 베이스 스크립트 Ver 1.7 ***/
 /* ID : dajob / PWD : dajob1710 */
 
-/** 1.5 ver 스크립트 초기화를 위한 테이블 삭제 **/
+/** 1.7 ver 스크립트 초기화를 위한 테이블 삭제 **/
 
 DROP TABLE MEMBER_TYPE CASCADE CONSTRAINTS;
 DROP TABLE MEMBER CASCADE CONSTRAINTS;
@@ -10,8 +10,14 @@ DROP TABLE COMP_TYPE CASCADE CONSTRAINTS;
 DROP TABLE MEMBER_COMPANY CASCADE CONSTRAINTS;
 DROP TABLE CERT CASCADE CONSTRAINTS;
 DROP TABLE USER_CERT CASCADE CONSTRAINTS;
+
 DROP VIEW VW_USER;
 DROP VIEW VW_COMPANY;
+DROP VIEW VW_TOTALCERT;
+DROP VIEW VW_LIKELIST;
+DROP VIEW VW_LIKECOMPLIST;
+DROP VIEW VW_INTERVIEW;
+DROP VIEW VW_WORKHERE;
 
 DROP TABLE ITINFO CASCADE CONSTRAINTS;
 DROP SEQUENCE SEQ_ITINFO;
@@ -20,6 +26,9 @@ DROP TABLE NOTICE CASCADE CONSTRAINTS;
 DROP SEQUENCE SEQ_NOTICE;
 DROP TABLE NOTICE_REPLY CASCADE CONSTRAINTS;
 DROP SEQUENCE SEQ_NO_REP;
+
+DROP TABLE WORKJOB CASCADE CONSTRAINTS;
+DROP TABLE SKILL CASCADE CONSTRAINTS;
 
 DROP TABLE WORK_BOARD CASCADE CONSTRAINTS;
 DROP SEQUENCE SEQ_WORK;
@@ -232,6 +241,15 @@ CREATE SEQUENCE SEQ_NO_REP
        CYCLE;
 
 --------------->> WORK HERE (WH) <<---------------
+CREATE TABLE WORKJOB (
+       JOB_CODE VARCHAR2(30) CONSTRAINT PK_JOB PRIMARY KEY,
+       JOB_NAME VARCHAR2(30) CONSTRAINT UK_JN UNIQUE
+);
+
+CREATE TABLE SKILL (
+       SKILL_CODE VARCHAR2(30) CONSTRAINT PK_SKILL PRIMARY KEY,
+       SKILL_NAME VARCHAR2(30) CONSTRAINT UK_SN UNIQUE
+);
 
 CREATE TABLE WORK_BOARD(
 	WORK_NO VARCHAR2(14) CONSTRAINT PK_WORK_NO PRIMARY KEY,
@@ -243,9 +261,11 @@ CREATE TABLE WORK_BOARD(
 	WORK_SKILL VARCHAR2(30),
 	WORK_CAREER VARCHAR2(30),
 	WORK_WORKPLACE VARCHAR2(300), /* 근무 지역 */
-	WORK_STARTDATE DATE DEFAULT SYSDATE,
-	WORK_ENDDATE DATE DEFAULT SYSDATE+14,
-       CONSTRAINT FK_WORK_WR FOREIGN KEY(WORK_WRITER) REFERENCES MEMBER ON DELETE CASCADE
+	WORK_STARTDATE TIMESTAMP DEFAULT SYSDATE,
+	WORK_ENDDATE TIMESTAMP DEFAULT SYSDATE+14,
+       CONSTRAINT FK_WORK_WR FOREIGN KEY(WORK_WRITER) REFERENCES MEMBER ON DELETE CASCADE,
+       CONSTRAINT FK_WORK_JB FOREIGN KEY(WORK_JOB) REFERENCES WORKJOB ON DELETE CASCADE,
+       CONSTRAINT FK_WORK_SK FOREIGN KEY(WORK_SKILL) REFERENCES SKILL ON DELETE CASCADE
 );
 
 CREATE SEQUENCE SEQ_WORK
@@ -259,6 +279,7 @@ CREATE SEQUENCE SEQ_WORK
 --INSERT INTO WORK_BOARD VALUES('111','222','333',NULL,DEFAULT,NULL,NULL,NULL,DEFAULT,DEFAULT);
 --select * from WORK_BOARD;
 --rollback;
+
 CREATE TABLE WORK_BOARD_REVIEW(
        WORK_NO VARCHAR2(14) NOT NULL,
        WORK_REVIEWER VARCHAR2(30) NOT NULL,
@@ -277,9 +298,9 @@ CREATE TABLE INTERVIEW(
   INTERVIEWEE VARCHAR2(30) NOT NULL,    /* 구직자 */
   INTERVIEW_QUESTION VARCHAR2(3000),   /* 질문 */
   INTERVIEW_ANSWER VARCHAR2(3000),       /* 답변 */
-  INTERVIEW_START_DATE DATE DEFAULT SYSDATE,   /* 면접시간 */
-  INTERVIEW_END_DATE DATE DEFAULT SYSDATE,
-  INTERVIEW_STATUS VARCHAR2(10) ,      /* 면접상태 */
+  INTERVIEW_START_DATE TIMESTAMP DEFAULT SYSDATE,   /* 면접시작시간 */
+  INTERVIEW_END_DATE TIMESTAMP DEFAULT SYSDATE,   /* 면접종료시간 */
+  INTERVIEW_STATUS VARCHAR2(10) NOT NULL,      /* 면접상태 */
   WORK_NO VARCHAR2(14),      /* 구직게시글번호 */
   CONSTRAINT FK_INTERVIEWER FOREIGN KEY(INTERVIEWER) REFERENCES MEMBER_COMPANY(MEMBER_ID) ON DELETE CASCADE,
   CONSTRAINT FK_INTERVIEWEE FOREIGN KEY(INTERVIEWEE) REFERENCES MEMBER_USER(MEMBER_ID) ON DELETE CASCADE,
@@ -292,7 +313,8 @@ COMMENT ON COLUMN INTERVIEW.INTERVIEWER IS '회사';
 COMMENT ON COLUMN INTERVIEW.INTERVIEWEE IS '구직자';
 COMMENT ON COLUMN INTERVIEW.INTERVIEW_QUESTION IS '질문';
 COMMENT ON COLUMN INTERVIEW.INTERVIEW_ANSWER IS '답변';
-COMMENT ON COLUMN INTERVIEW.INTERVIEW_DATE IS '면접시간';
+COMMENT ON COLUMN INTERVIEW.INTERVIEW_STARTDATE IS '면접시작시간';
+COMMENT ON COLUMN INTERVIEW.INTERVIEW_ENDDATE IS '면접종료시간';
 COMMENT ON COLUMN INTERVIEW.INTERVIEW_STATUS IS '면접상태';
 COMMENT ON COLUMN INTERVIEW.WORK_NO IS '구직게시글번호';
 
@@ -310,7 +332,7 @@ CREATE TABLE POWERLINK(
   POWERLINK_DATE DATE DEFAULT SYSDATE, /* 신청일 */
   POWERLINK_CNT NUMBER DEFAULT 0,    /* 신청횟수 */
   POWERLINK_TIME NUMBER DEFAULT 0,   /* 남은시간 */
-  CONSTRAINT FK_PL_ID FOREIGN KEY(MEMBER_ID) REFERENCES MEMBER_COMPANY(MEMBER_ID) ON DELETE CASCADE
+  CONSTRAINT FK_PL_ID FOREIGN KEY(MEMBER_ID) REFERENCES MEMBER_COMPANY(MEMBER_ID) ON DELETE SET NULL
 );
 
 COMMENT ON TABLE POWERLINK IS '파워링크';
@@ -330,8 +352,8 @@ CREATE TRIGGER TR_POWERLINK
        v_id VARCHAR2(30);
      BEGIN
        v_id := :NEW.MEMBER_ID;
-       INSERT INTO POWERLINK(MEMBER_ID, POWERLINK_CNT, POWERLINK_TIME)
-       VALUES(v_id, DEFAULT, DEFAULT);
+       INSERT INTO POWERLINK(MEMBER_ID, POWERLINK_TIME, POWERLINK_DATE)
+       VALUES(v_id, DEFAULT, TO_DATE('2017-01-01','RRRR-MM-DD'));
      END; 
      /
 -- 1시간에 1번 구동하는 POWERLINK JOB_SCHEDULER
@@ -383,10 +405,11 @@ EXEC DBMS_SCHEDULER.RUN_JOB('DAJOB.JOB_PR_TIMER');
 --------------->> 기타 <<---------------
 -- 좋아요 등록
 CREATE TABLE LIKELIST(
-       MEMBER_ID,
-       WORK_NO,
+       MEMBER_ID VARCHAR2(30),
+       WORK_NO VARCHAR2(14),
        CONSTRAINT FK_LL_UID FOREIGN KEY(MEMBER_ID) REFERENCES MEMBER_USER(MEMBER_ID) ON DELETE CASCADE,
-       CONSTRAINT FK_LL_WORKNO FOREIGN KEY(WORK_NO) REFERENCES WORK_BOARD ON DELETE CASCADE
+       CONSTRAINT FK_LL_WORKNO FOREIGN KEY(WORK_NO) REFERENCES WORK_BOARD ON DELETE CASCADE,
+       CONSTRAINT PK_LL PRIMARY KEY (MEMBER_ID, WORK_NO)
 );
 
 -- 평균 연봉 기준
@@ -395,6 +418,53 @@ CREATE TABLE SAL_AVG(
        SAL_MIN NUMBER,
        SAL_MAX NUMBER
 );
+
+---------- 관리자 대시보드 구현 중 70% ------------
+-- 현재 회원 가입자 수
+--select count(*) from member;
+-- 회원 별 가입자 수
+--select MEMBER_TYPE_CODE, count(*) from MEMBER GROUP BY MEMBER_TYPE_CODE; 
+
+-- 총 수익
+--select sum(POWERLINK_CNT)*600000 "tot_profit" from powerlink;
+
+-- 월별 수익 (3개월 분)
+--select SUBSTR(POWERLINK_DATE,1,5) "mon", (sum(POWERLINK_CNT)*600000) "mon_profit" from POWERLINK GROUP BY SUBSTR(POWERLINK_DATE,1,5);
+
+-- 지역별 구인 정보 갯수 (Top 5)
+--select * from (select substr(WORK_WORKPLACE,1,2) "place" ,count(*) "cnt" from WORK_BOARD group by substr(WORK_WORKPLACE,1,2) order by 2 desc) where rownum < 6;
+
+--선호기업리스트 VIEW
+CREATE OR REPLACE VIEW VW_LIKECOMPLIST (WORK_NO, WORK_WRITER, WORK_SKILL, WORK_CAREER, WORK_WORKPLACE, WORK_STARTDATE, WORK_ENDDATE, MEMBER_ID)
+AS SELECT WORK_NO, WORK_WRITER, WORK_SKILL, WORK_CAREER, WORK_WORKPLACE, WORK_STARTDATE, WORK_ENDDATE, MEMBER_ID FROM WORK_BOARD 
+ JOIN LIKELIST USING(WORK_NO) ORDER BY WORK_ENDDATE ASC, WORK_WRITER ASC;
+
+------->> 안재성 VIEW 생성부분 <<-------
+
+-- CERT와 USER_CERT를 합친 뷰
+CREATE OR REPLACE VIEW VW_TOTALCERT (MEMBER_ID, CERT_NAME, CERT_TYPE, CERT_DATE)
+AS SELECT MEMBER_ID, CERT_NAME, CERT_TYPE, CERT_DATE FROM USER_CERT
+JOIN CERT USING(CERT_NO);
+
+-- 유저가 선호기업으로 지정해놓은 회사명과 그 해당하는 게시글의 정보를 불러오기위한 뷰
+CREATE OR REPLACE VIEW VW_LIKELIST(MEMBER_ID, COMPANY_NAME, WORK_TITLE)
+AS SELECT L.MEMBER_ID, C.COMPANY_NAME, W.WORK_TITLE
+FROM LIKELIST L
+JOIN WORK_BOARD W USING(WORK_NO)
+JOIN VW_COMPANY C ON(W.WORK_WRITER = C.MEMBER_ID);
+
+--------------->> 상민 VIEW 생성부분 <<---------------
+
+--VW_WORKHERE
+CREATE OR REPLACE VIEW VW_WORKHERE (WORK_NO,WORK_TITLE,WORK_CONTENT,WORK_WRITER,WORK_DATE,WORK_JOB,WORK_SKILL,WORK_CAREER,WORK_WORKPLACE,WORK_STARTDATE,WORK_ENDDATE,MEMBER_ID,  COMPANY_NAME , COMPANY_TYPE, COMPANY_STAFF, COMPANY_CAPITAL, COMPANY_CODE, COMPANY_TEL, COMPANY_FAX, COMPANY_WELFARE, COMPANY_DATE)
+AS SELECT WORK_NO,WORK_TITLE,WORK_CONTENT,WORK_WRITER,WORK_DATE,WORK_JOB,WORK_SKILL,WORK_CAREER,WORK_WORKPLACE,WORK_STARTDATE,WORK_ENDDATE,MEMBER_ID,  COMPANY_NAME , COMPANY_TYPE, COMPANY_STAFF, COMPANY_CAPITAL, COMPANY_CODE, COMPANY_TEL, COMPANY_FAX, COMPANY_WELFARE, COMPANY_DATE FROM WORK_BOARD
+JOIN MEMBER_COMPANY ON(MEMBER_COMPANY.MEMBER_ID = WORK_BOARD.WORK_WRITER);
+
+CREATE OR REPLACE VIEW VW_INTERVIEW (INTERVIEW_NO,INTERVIEWER,INTERVIEWEE,INTERVIEW_QUESTION,INTERVIEW_ANSWER,INTERVIEW_START_DATE,INTERVIEW_END_DATE,INTERVIEW_STATUS,WORK_NO,MEMBER_ID,COMPANY_NAME,COMPANY_TYPE,COMPANY_STAFF,COMPANY_CAPITAL,COMPANY_CODE,COMPANY_TEL,COMPANY_FAX,COMPANY_WELFARE,COMPANY_DATE)
+AS SELECT INTERVIEW_NO,INTERVIEWER,INTERVIEWEE,INTERVIEW_QUESTION,INTERVIEW_ANSWER,INTERVIEW_STARTDATE,INTERVIEW_ENDDATE,INTERVIEW_STATUS,WORK_NO,MEMBER_ID,COMPANY_NAME,COMPANY_TYPE,COMPANY_STAFF,COMPANY_CAPITAL,COMPANY_CODE,COMPANY_TEL,COMPANY_FAX,COMPANY_WELFARE,COMPANY_DATE FROM INTERVIEW
+JOIN MEMBER_COMPANY ON(MEMBER_COMPANY.MEMBER_ID = INTERVIEW.INTERVIEWER);
+
+--select * from vw_interview;
 
 --------------->> Sample Data <<---------------
 
@@ -409,6 +479,20 @@ INSERT INTO COMP_TYPE VALUES('T4','대기업');
 INSERT INTO COMP_TYPE VALUES('T5','공기업');
 INSERT INTO COMP_TYPE VALUES('T6','외국계기업');
 INSERT INTO COMP_TYPE VALUES('T7','벤처기업');
+
+INSERT INTO WORKJOB VALUES(1,'웹 개발자');
+INSERT INTO WORKJOB VALUES(2,'웹 퍼블리셔');
+INSERT INTO WORKJOB VALUES(3,'웹 디자이너');
+INSERT INTO WORKJOB VALUES(4,'임베디드 개발자');
+INSERT INTO WORKJOB VALUES(5,'시스템 엔지니어');
+INSERT INTO WORKJOB VALUES(6,'DB 관리자');
+INSERT INTO WORKJOB VALUES(7,'서버 관리자');
+
+INSERT INTO SKILL VALUES(1,'JAVA');
+INSERT INTO SKILL VALUES(2,'Databases');
+INSERT INTO SKILL VALUES(3,'Spring');
+INSERT INTO SKILL VALUES(4,'C/C++');
+INSERT INTO SKILL VALUES(5,'UNIX/LINUX');
 
 INSERT INTO MEMBER VALUES('admin','admin','A','관리자','firerain4@naver.com','010-5688-2293','22020,서울시,강남구 역삼동',SYSDATE,'admin.jpg');
 INSERT INTO MEMBER(MEMBER_ID,MEMBER_PASSWORD,MEMBER_TYPE_CODE,MEMBER_NAME,MEMBER_EMAIL,
@@ -474,13 +558,27 @@ VALUES('user00','F',SYSDATE,NULL);
 
 INSERT INTO MEMBER(MEMBER_ID,MEMBER_PASSWORD,MEMBER_TYPE_CODE,
 MEMBER_NAME,MEMBER_EMAIL,MEMBER_PHONE,MEMBER_ADDRESS,MEMBER_SIGN_DATE,MEMBER_PROFILE_IMG)
-VALUES('comp11','pass11','C','김갑환','comp11@iei.or.kr','010-2111-1111','22021,서울시,강남구,선릉동',SYSDATE,'default.jpg');
+VALUES('comp11','pass11','C','김한조','comp11@iei.or.kr','010-2111-1111','22021,서울시,강남구 선릉동',SYSDATE,'comp11/comp11.jpg');
 INSERT INTO MEMBER_COMPANY(MEMBER_ID,COMPANY_TYPE,COMPANY_NAME,COMPANY_STAFF,COMPANY_CAPITAL,
 COMPANY_CODE,COMPANY_TEL,COMPANY_FAX,COMPANY_WELFARE,COMPANY_DATE)
 VALUES('comp11','T3','가나주식회사',250,150,'402-00-00001','02-0001-0001',
-'02-0001-0002','4대보험,유류비 지원',TO_DATE('2000-02-01','RRRR-MM-DD'));
+'02-0001-0002','4대보험,유류비 지원,야근 수당',TO_DATE('2000-02-01','RRRR-MM-DD'));
+INSERT INTO MEMBER(MEMBER_ID,MEMBER_PASSWORD,MEMBER_TYPE_CODE,
+MEMBER_NAME,MEMBER_EMAIL,MEMBER_PHONE,MEMBER_ADDRESS,MEMBER_SIGN_DATE,MEMBER_PROFILE_IMG)
+VALUES('comp22','pass22','C','다길마크','comp22@iei.or.kr','010-2112-1111','221,서울시,강남구 서초동',SYSDATE,'comp22/comp22.jpg');
+INSERT INTO MEMBER_COMPANY(MEMBER_ID,COMPANY_TYPE,COMPANY_NAME,COMPANY_STAFF,COMPANY_CAPITAL,
+COMPANY_CODE,COMPANY_TEL,COMPANY_FAX,COMPANY_WELFARE,COMPANY_DATE)
+VALUES('comp22','T2','동막골 주식회사',250,150,'402-01-00001','02-0002-0001',
+'02-0002-0002','4대보험,상여금 지급',TO_DATE('2010-07-15','RRRR-MM-DD'));
+INSERT INTO MEMBER(MEMBER_ID,MEMBER_PASSWORD,MEMBER_TYPE_CODE,
+MEMBER_NAME,MEMBER_EMAIL,MEMBER_PHONE,MEMBER_ADDRESS,MEMBER_SIGN_DATE,MEMBER_PROFILE_IMG)
+VALUES('comp33','pass33','C','다리우스 장','comp33@iei.or.kr','010-2113-1111','210,서울시,강남구 논현동',SYSDATE,'comp33/comp33.jpg');
+INSERT INTO MEMBER_COMPANY(MEMBER_ID,COMPANY_TYPE,COMPANY_NAME,COMPANY_STAFF,COMPANY_CAPITAL,
+COMPANY_CODE,COMPANY_TEL,COMPANY_FAX,COMPANY_WELFARE,COMPANY_DATE)
+VALUES('comp33','T4','IT 유니언즈',250,150,'402-02-00001','02-0003-0001',
+'02-0003-0002','4대보험,유류비 지원,상여금 지급,야근 수당,자기개발비 지원',TO_DATE('1998-10-25','RRRR-MM-DD'));
 --SELECT * FROM POWERLINK;
-UPDATE POWERLINK SET POWERLINK_CNT = POWERLINK_CNT + 1, POWERLINK_TIME = 120;
+--UPDATE POWERLINK SET POWERLINK_CNT = POWERLINK_CNT + 1, POWERLINK_TIME = 120;
 
 INSERT INTO CERT VALUES('CE170101010000','OCJP','JAVA');
 INSERT INTO CERT VALUES('CE170101010001','OCWCD','JAVA');
@@ -528,29 +626,37 @@ INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1701061113','RRMMDDHH24MI'),'RR
 INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1701061114','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'4'),'DAJOB TEST Reply','DAJOB TEST Reply',TO_DATE('2017-01-09','RRRR-MM-DD'));
 INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1701061115','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'5'),'DAJOB TEST Reply Level','DAJOB TEST Reply Level',TO_DATE('2017-01-10','RRRR-MM-DD'));
 INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707130239','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[축]개업기념','이벤트 개최 행사 진행중 ! ',TO_DATE('2017-04-15','RRRR-MM-DD'));
-INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707142030','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[긴급]서버 점검','서버점검이 있을 예정이오니 신속히 로그아웃을 하고 홈페이지를 닫아주세요',TO_DATE('2017-06-10','RRRR-MM-DD'));
-INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707151124','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[긴급]서버 점검기간 연장 안내문','서버 점검이 지연되어 기간이 늘어남을 알립니다.',TO_DATE('2017-07-11','RRRR-MM-DD'));
-INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707152130','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[공지]서버 점검 완료 공지','서버점검이 완료 되었습니다.',TO_DATE('2017-07-12','RRRR-MM-DD'));
-INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707171530','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[공지]관련 기업에 대하여','관련 기업을 찾으시는 회원분들께 안내 말씀 드립니다. 본 사이트의 주 목적은 제 1장 관련된 해당 기업의 정보를 공유할 수 있습니다.',TO_DATE('2017-07-13','RRRR-MM-DD'));
-INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707182130','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[공지]내가 원하는 기업에 대하여','나와 맞는 기업을 찾기위해 내 정보를 마이페이지나 체크박스를 통하여 취득한 자격증 전공한 기술 등 을 보고 기업을 찾을 수 있습니다.',TO_DATE('2017-07-15','RRRR-MM-DD'));
-INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707182230','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[공지]서버 관리자 모집','서버 관리자를 모집합니다. 지원조건은 만 19세 이상 만 30세 미만의 여성 우대이며, 남성은 경력자 우대 스프링 코드를 구현해보신 분을 모집합니다.',TO_DATE('2017-07-15','RRRR-MM-DD'));
-INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707182330','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[Inform]SERVER WINTER EVENT','COLD WINTER EVENT COME HERE WE FIND IT MY SELF',TO_DATE('2017-07-17','RRRR-MM-DD'));
-INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707190130','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[공지]해외 기업 협약 안내문','해외기업을 선호하시는 분들은 해외 기업과 협약서를 같이 제출하여 지원할 수 있습니다.',TO_DATE('2017-07-17','RRRR-MM-DD'));
-INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707190330','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[Inform]Notice about Career staff', 'When resigning from a job role, it is considered best practice to give your employer the notice period as stated in your contract before you depart. This period of time allows your employer to plan for your departure, and to ensure that your job responsibilities are fully covered as to not disrupt the business and work flow.',TO_DATE('2017-07-17','RRRR-MM-DD'));
+INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707142030','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[긴급] 서버 점검','서버점검이 있을 예정이오니 신속히 로그아웃을 하고 홈페이지를 닫아주세요',TO_DATE('2017-06-10','RRRR-MM-DD'));
+INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707151124','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[긴급] 서버 점검기간 연장 안내문','서버 점검이 지연되어 기간이 늘어남을 알립니다.',TO_DATE('2017-07-11','RRRR-MM-DD'));
+INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707152130','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[공지] 서버 점검 완료 공지','서버점검이 완료 되었습니다.',TO_DATE('2017-07-12','RRRR-MM-DD'));
+INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707171530','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[공지] 관련 기업에 대하여','관련 기업을 찾으시는 회원분들께 안내 말씀 드립니다. 본 사이트의 주 목적은 제 1장 관련된 해당 기업의 정보를 공유할 수 있습니다.',TO_DATE('2017-07-13','RRRR-MM-DD'));
+INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707182130','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[공지] 내가 원하는 기업에 대하여','나와 맞는 기업을 찾기위해 내 정보를 마이페이지나 체크박스를 통하여 취득한 자격증 전공한 기술 등 을 보고 기업을 찾을 수 있습니다.',TO_DATE('2017-07-15','RRRR-MM-DD'));
+INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707182230','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[공지]  서버 관리자 모집','서버 관리자를 모집합니다. 지원조건은 만 19세 이상 만 30세 미만의 여성 우대이며, 남성은 경력자 우대 스프링 코드를 구현해보신 분을 모집합니다.',TO_DATE('2017-07-15','RRRR-MM-DD'));
+INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707182330','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[Inform] SERVER WINTER EVENT','COLD WINTER EVENT COME HERE WE FIND IT MY SELF',TO_DATE('2017-07-17','RRRR-MM-DD'));
+INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707190130','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[공지] 해외 기업 협약 안내문','해외기업을 선호하시는 분들은 해외 기업과 협약서를 같이 제출하여 지원할 수 있습니다.',TO_DATE('2017-07-17','RRRR-MM-DD'));
+INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707190330','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[Inform] Notice about Career staff', 'When resigning from a job role, it is considered best practice to give your employer the notice period as stated in your contract before you depart. This period of time allows your employer to plan for your departure, and to ensure that your job responsibilities are fully covered as to not disrupt the business and work flow.',TO_DATE('2017-07-17','RRRR-MM-DD'));
 INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707191030','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[공지] KG모빌리언스 크롬 브라우저 일부버전 오류관련 공지','현재 크롬 웹브라우저 및 웹뷰 일부 버전에서 오류현상이 발생중이므로 하단 내용 참고 부탁드립니다.',TO_DATE('2017-07-15','RRRR-MM-DD'));
-INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707192130','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[긴급]	다날 휴대폰 결제 정산관련 사용중지 안내','현재 다날 휴대폰 결제를 이용하고있는 상점에서 "익주정산(매출 주의 익주 수요일)", "익초 정산(매출월의 익월 5일)" 주기로 선택하여 계약한 상점은 정상결제 진행이 안되고 있는 부분으로,
+INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707192130','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[긴급] 다날 휴대폰 결제 정산관련 사용중지 안내','현재 다날 휴대폰 결제를 이용하고있는 상점에서 "익주정산(매출 주의 익주 수요일)", "익초 정산(매출월의 익월 5일)" 주기로 선택하여 계약한 상점은 정상결제 진행이 안되고 있는 부분으로,
 기능 수정전까지 다날 휴대폰 결제 사용을 중지해 주시기 바라며 다날쪽과 확인하여 빠른시일내로 정상처리 될 수있도록 하겠습니다.',TO_DATE('2017-07-16','RRRR-MM-DD'));
 INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707201530','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[공지] 다음 커머스원 기업 업데이트 일시 중단_8/16 (수요일)','DB 작업으로 인해, 커머스원의 기업 업데이트  작업이 2017년 8월 16일 14시부터 18시까지 중단됩니다. 작업 종료 후 스케쥴에 따라 정상적으로 상품 수집을 진행할 예정이며, 기존에 커머스원을 통해 기업 업데이트가 지연되는 문제들도 정상적으로 업데이트 진행될 예정입니다',TO_DATE('2017-07-16','RRRR-MM-DD'));
 INSERT INTO NOTICE VALUES('NO'||TO_CHAR(TO_DATE('1707222030','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[긴급] 오류 점검 일시 금일 오후 밤 10시부터','데이터 업데이트로 인한 오류및 점검 수정이 있을 예정이오니 오후 10시 이후 서비스가 중단될 예정입니다.',TO_DATE('2017-08-17','RRRR-MM-DD'));
 
-
 INSERT INTO NOTICE_REPLY VALUES('NP170722012001','NO170720153001','넵, 알겠습니다.','user11',SYSDATE,0,NULL);
 INSERT INTO NOTICE_REPLY VALUES('NP170722012002','NO170720153001','빨리 정상화 되면 좋겠네요.','user22',SYSDATE,1,'NP170722012001');
+INSERT INTO NOTICE_REPLY VALUES('NP170722013002','NO170720153001','그러게요. 관리자님 고생 많으시네요.','user44',SYSDATE,1,'NP170722012001');
 INSERT INTO NOTICE_REPLY VALUES('NP170722012003','NO170720153001','넵, 숙지할게요~~','user33',SYSDATE,0,NULL);
 INSERT INTO NOTICE_REPLY VALUES('NP170722012004','NO170720153001','숙지하겠습니다','user44',SYSDATE,0,NULL);
 INSERT INTO NOTICE_REPLY VALUES('NP170723012001','NO170722203001','무플 방지 위원회에서 왔... 죄송합니다.','user11',SYSDATE,0,NULL);
 INSERT INTO NOTICE_REPLY VALUES('NP170723012002','NO170722203001','넵, 알겠습니다.','user22',SYSDATE,1,'NP170723012001');
 INSERT INTO NOTICE_REPLY VALUES('NP170723012003','NO170722203001','예압!!','user33',SYSDATE,2,'NP170723012002');
+
+INSERT INTO POWERLINK VALUES('comp11',TO_DATE('2017-08-11','RRRR-MM-DD'),2,0);
+INSERT INTO POWERLINK VALUES('comp11',TO_DATE('2017-09-10','RRRR-MM-DD'),2,0);
+INSERT INTO POWERLINK VALUES('comp22',TO_DATE('2017-09-05','RRRR-MM-DD'),1,0);
+INSERT INTO POWERLINK VALUES('comp22',TO_DATE('2017-10-04','RRRR-MM-DD'),1,420);
+INSERT INTO POWERLINK VALUES('comp33',TO_DATE('2017-08-21','RRRR-MM-DD'),2,0);
+INSERT INTO POWERLINK VALUES('comp33',TO_DATE('2017-09-11','RRRR-MM-DD'),3,0);
+INSERT INTO POWERLINK VALUES('comp33',TO_DATE('2017-10-01','RRRR-MM-DD'),1,264);
 
 INSERT INTO SAL_AVG VALUES(1,2000,2200);
 INSERT INTO SAL_AVG VALUES(3,2200,2400);
@@ -588,23 +694,39 @@ INSERT INTO ITINFO VALUES('IT170821022000','능동형 보안 아키텍처(Adapti
 하지만, IoT의 한계는 수많은 IT 보안 담당자들에게 새로운 영역으로 새로운 취약 지점 영역을 생성하고 있기 때문에 새로운 교정 툴과 프로세스가 필요하며 IoT 플랫폼 관련 프로젝트에서는 이를 반드시 고려해야 할 것"이라고 강조했다.'
 ,'itinfoImage/image10.jpg',TO_DATE('2017-08-21','RRRR-MM-DD'));
 
-
 -- Work here 샘플데이터
-INSERT INTO WORK_BOARD VALUES('WO'||TO_CHAR(TO_DATE('1707141030','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'급구합니다','랩 잘하는 친구 BRING IT!!','comp11',TO_DATE('1707141030','RRMMDDHH24MI'),'SW개발','JAVA ORACLE','없음','서울시 강남구',DEFAULT,DEFAULT);
+
+INSERT ALL 
+INTO WORK_BOARD VALUES('WO'||TO_CHAR(TO_DATE('1707141030','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[JAVA] 웹 개발자 모집','Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.','comp11',TO_DATE('1707141030','RRMMDDHH24MI'),'1','1','신입','서울시 강남구',DEFAULT,DEFAULT)
+INTO WORK_BOARD VALUES('WO'||TO_CHAR(TO_DATE('1707150930','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[DB] 웹 퍼블리셔 모집','Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.','comp22',TO_DATE('1707150930','RRMMDDHH24MI'),'2','2','경력','부산시 서면',DEFAULT,DEFAULT)
+INTO WORK_BOARD VALUES('WO'||TO_CHAR(TO_DATE('1707171025','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[SPRING] 스프링 가능한 웹 개발자 모집','Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.','comp11',TO_DATE('1707171025','RRMMDDHH24MI'),'1','3','신입','울산시 OO구',DEFAULT,DEFAULT)
+INTO WORK_BOARD VALUES('WO'||TO_CHAR(TO_DATE('1708051200','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[C++] APP IO 개발자 모집','Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.','comp22',TO_DATE('1708051200','RRMMDDHH24MI'),'2','4','신입','서울시 서초구',DEFAULT,DEFAULT)
+INTO WORK_BOARD VALUES('WO'||TO_CHAR(TO_DATE('1708101025','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[SPRING] 스프링 개발자 모집','Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.','comp11',TO_DATE('1708101025','RRMMDDHH24MI'),'1','3','신입','울산시 OO구',DEFAULT,DEFAULT)
+INTO WORK_BOARD VALUES('WO'||TO_CHAR(TO_DATE('1708111200','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[C++] IOT 웹 개발자 모집','Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.','comp22',TO_DATE('1708111200','RRMMDDHH24MI'),'2','4','신입','서울시 서초구',DEFAULT,DEFAULT)
+INTO WORK_BOARD VALUES('WO'||TO_CHAR(TO_DATE('1708111530','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[SPRING] 스프링 실력자 급구','Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.','comp11',TO_DATE('1708111530','RRMMDDHH24MI'),'1','3','신입','부산시 OO구',DEFAULT,DEFAULT)
+INTO WORK_BOARD VALUES('WO'||TO_CHAR(TO_DATE('1708121200','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[C/C++] C언어 가능자 모집','Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.','comp22',TO_DATE('1708121200','RRMMDDHH24MI'),'2','4','신입','부산시 OO구',DEFAULT,DEFAULT)
+INTO WORK_BOARD VALUES('WO'||TO_CHAR(TO_DATE('1708121335','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[SPRING] 스프링 경험자 모집','Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.','comp11',TO_DATE('1708121335','RRMMDDHH24MI'),'1','3','신입','대구시 OO구',DEFAULT,DEFAULT)
+INTO WORK_BOARD VALUES('WO'||TO_CHAR(TO_DATE('1708150530','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[C/C++] C 코딩 가능자 모집','Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.','comp22',TO_DATE('1708150530','RRMMDDHH24MI'),'2','4','신입','서울시 서초구',DEFAULT,DEFAULT)
+INTO WORK_BOARD VALUES('WO'||TO_CHAR(TO_DATE('1708161125','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[JAVA] MVC 패턴 숙련자 모집','Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.','comp33',TO_DATE('1708161125','RRMMDDHH24MI'),'3','1','경력','대전시 OO구',DEFAULT,DEFAULT)
+INTO WORK_BOARD VALUES('WO'||TO_CHAR(TO_DATE('1709010150','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[SPRING] 숙련된 디자이너 모집','Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.','comp33',TO_DATE('1709010150','RRMMDDHH24MI'),'3','3','경력','대전시 OO구',DEFAULT,DEFAULT)
+INTO WORK_BOARD VALUES('WO'||TO_CHAR(TO_DATE('1709050505','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[JAVA] 자바 개발 가능하신 분','Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.','comp11',TO_DATE('1709050505','RRMMDDHH24MI'),'2','1','경력','대구시 OO구',DEFAULT,DEFAULT)
+INTO WORK_BOARD VALUES('WO'||TO_CHAR(TO_DATE('1709101520','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[SPRING] 스프링 개발자 모집','Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.','comp22',TO_DATE('1709101520','RRMMDDHH24MI'),'2','3','신입','서울시 강남구',DEFAULT,DEFAULT)
+INTO WORK_BOARD VALUES('WO'||TO_CHAR(TO_DATE('1709111520','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'[SPRING] 웹 어플 구현 가능자 모집','Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.','comp22',TO_DATE('1709111520','RRMMDDHH24MI'),'2','3','신입','서울시 강남구',DEFAULT,DEFAULT)
+SELECT * FROM DUAL;
+
+--INTERVIEW 샘플데이터
+INSERT INTO INTERVIEW VALUES('IN'||TO_CHAR(TO_DATE('1707141030','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'comp11','user11','당신의 미래 가치관에 대해서 10000자로 서술하시오.',NULL,TO_DATE('1707141030','RRMMDDHH24MI'),TO_DATE('1707141130','RRMMDDHH24MI'),'H','WO170714103001');
 
 --VW_WORKHERE
 CREATE OR REPLACE VIEW VW_WORKHERE (WORK_NO,WORK_TITLE,WORK_CONTENT,WORK_WRITER,WORK_DATE,WORK_JOB,WORK_SKILL,WORK_CAREER,WORK_WORKPLACE,WORK_STARTDATE,WORK_ENDDATE,MEMBER_ID,  COMPANY_NAME , COMPANY_TYPE, COMPANY_STAFF, COMPANY_CAPITAL, COMPANY_CODE, COMPANY_TEL, COMPANY_FAX, COMPANY_WELFARE, COMPANY_DATE)
 AS SELECT WORK_NO,WORK_TITLE,WORK_CONTENT,WORK_WRITER,WORK_DATE,WORK_JOB,WORK_SKILL,WORK_CAREER,WORK_WORKPLACE,WORK_STARTDATE,WORK_ENDDATE,MEMBER_ID,  COMPANY_NAME , COMPANY_TYPE, COMPANY_STAFF, COMPANY_CAPITAL, COMPANY_CODE, COMPANY_TEL, COMPANY_FAX, COMPANY_WELFARE, COMPANY_DATE FROM WORK_BOARD
 JOIN MEMBER_COMPANY ON(MEMBER_COMPANY.MEMBER_ID = WORK_BOARD.WORK_WRITER);
-commit;
-
---INTERVIEW 샘플데이터
-INSERT INTO INTERVIEW VALUES('IN'||TO_CHAR(TO_DATE('1707141030','RRMMDDHH24MI'),'RRMMDDHH24MI')||LPAD(1,2,'0'),'comp11','user11','당신의 미래 가치관에 대해서 10000자로 서술하시오.',NULL,TO_DATE('1707141030','RRMMDDHH24MI'),TO_DATE('1707141130','RRMMDDHH24MI'),'H','WO170714103001');
 
 --VW_INTERVIEW
 CREATE OR REPLACE VIEW VW_INTERVIEW (INTERVIEW_NO,INTERVIEWER,INTERVIEWEE,INTERVIEW_QUESTION,INTERVIEW_ANSWER,INTERVIEW_START_DATE,INTERVIEW_END_DATE,INTERVIEW_STATUS,WORK_NO,MEMBER_ID,COMPANY_NAME,COMPANY_TYPE,COMPANY_STAFF,COMPANY_CAPITAL,COMPANY_CODE,COMPANY_TEL,COMPANY_FAX,COMPANY_WELFARE,COMPANY_DATE)
 AS SELECT INTERVIEW_NO,INTERVIEWER,INTERVIEWEE,INTERVIEW_QUESTION,INTERVIEW_ANSWER,INTERVIEW_START_DATE,INTERVIEW_END_DATE,INTERVIEW_STATUS,WORK_NO,MEMBER_ID,COMPANY_NAME,COMPANY_TYPE,COMPANY_STAFF,COMPANY_CAPITAL,COMPANY_CODE,COMPANY_TEL,COMPANY_FAX,COMPANY_WELFARE,COMPANY_DATE FROM INTERVIEW
 JOIN MEMBER_COMPANY ON(MEMBER_COMPANY.MEMBER_ID = INTERVIEW.INTERVIEWER);
 commit;
-select * from vw_interview;
+
+
 -----------------------------------------------

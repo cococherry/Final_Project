@@ -29,10 +29,6 @@
     <![endif]-->
     <c:set var="workhere" value="${workhere}"/>
     <style>
-       #map {
-        height: 400px;
-        width: 100%;
-       }
     </style>
 </head>
 <body>
@@ -57,35 +53,37 @@
             </div> <!--./row-->
         </div> <!--./Container-->
     </header>
-	<div>
+	<section class="wrapper">
         <div class="panel panel-default">
-                <form method="POST" action="interviewInsert.do" >
-                	<input hidden="true" type="text" value="${workhere.member_id }" name="interviewer">
-                	<input hidden="true" type="text" value="${member.member_id }" name="interviewee">
-                	<input hidden="true" type="text" value="${workhere.work_no }" name="work_no">
+                <form action="interviewInsert.do" method="POST">
+                <input type="hidden" name="work_no" value="${workhere.work_no}">
+                <input type="hidden" name="interviewer" value="${workhere.work_writer}">
+                <input type="hidden" name="interviewee" value="${member.member_id}">
+                <input type="hidden" name="interview_status" value="H">
                     <div class="panel-body article">
-                        <h4>${workhere.company_name } 인터뷰 신청하기</h4>
+                        <h4>${workhere.company_name} 인터뷰 신청하기</h4>
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                <div class="row">
 								        <div class="form-group col-md-6 mb-6">
 							                <label for="dtp_input1" class="control-label">시작 시간</label>
-							                <div class="input-group date form_datetime" data-date="2017-10-13T05:25:07Z" data-date-format="yyyy년 MM dd일  p HH:ii" data-link-field="dtp_input1">
-							                    <input class="form-control" size="16" type="text" name="start" readonly>
+							                <fmt:formatDate var="today" value="${now}" type="both" pattern="yyyy-MM-ddTHH:mm:ssZ"/>
+							                <c:set var="toDay" value="${today}"/>
+							                <div class="input-group date form_datetime1" data-date="${toDay}" data-date-format="yyyy년 MM dd일  p HH:ii" data-link-field="dtp_input1">
+							                    <input class="form-control" size="16" type="text" name="dateFormat1" readonly>
 							                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
 												<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+												<input type="hidden" id="start" name="start" value="" readonly />
 							                </div>
-											<input type="hidden" id="dtp_input1" value="" /><br/>
 							            </div>
-							 			
 							 			<div class="form-group col-md-6 mb-6">
 							                <label for="dtp_input1" class="control-label">끝나는 시간</label>
-							                <div class="input-group date form_datetime" data-date="2017-10-13T05:25:07Z" data-date-format="yyyy년 MM dd일  p HH:ii" data-link-field="dtp_input1">
-							                    <input class="form-control" size="16" type="text" name="end" readonly>
+							                <div class="input-group date form_datetime2" data-date="${toDay}" data-date-format="yyyy년 MM dd일  p HH:ii" data-link-field="dtp_input1">
+							                    <input class="form-control" size="16" type="text" name="dateFormat2" readonly>
 							                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
 												<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+												<input type="hidden" id="end" name="end" value="" readonly />
 							                </div>
-											<input type="hidden" id="dtp_input1" value="" /><br/>
 							            </div>
 									  </div>				                                
                               </div>
@@ -94,14 +92,14 @@
                             <li>
                                 <input type="submit" class="btn btn-default" value="신청하기">
                             </li>
-                            </form>
                             <li>
                                <button type="button" class="btn btn-default" onclick="javascript:history.go(-1);">취소하기</button>
                             </li>
                         </ul>
                     </div>
+                    </form>
             </div>
-	
+	</section>
 	
 	<!--start footer-->
 	<c:import url="../footer.jsp"/>
@@ -111,15 +109,31 @@
 	<script src="<c:url value='/resources/js/calender/bootstrap-datetimepicker.min.js'/>"></script>
 	<script src="<c:url value='/resources/js/calender/bootstrap-datetimepicker.ko.js'/>"></script>
 	<script type="text/javascript">
-    $('.form_datetime').datetimepicker({
+	$('.form_datetime1').datetimepicker({
         language:  'ko',
         weekStart: 1,
         todayBtn:  1,
 		autoclose: 1,
+		startDate: new Date(),
 		todayHighlight: 1,
 		startView: 2,
 		forceParse: 0,
-        showMeridian: 1
+        showMeridian: 1,
+        linkField: "start",
+        linkFormat: "yyyy-mm-dd hh:ii"
+    });
+	$('.form_datetime2').datetimepicker({
+        language:  'ko',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		startDate: new Date(),
+		todayHighlight: 1,
+		startView: 2,
+		forceParse: 0,
+        showMeridian: 1,
+        linkField: "end",
+        linkFormat: "yyyy-mm-dd hh:ii"
     });
     </script>
 </body>
