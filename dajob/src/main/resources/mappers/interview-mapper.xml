@@ -47,12 +47,14 @@
 		INSERT INTO INTERVIEW VALUES('IN'||TO_CHAR(SYSDATE,'RRMMDDHH24MI')||LPAD(SEQ_INTERVIEW.NEXTVAL,2,'0'),#{interviewer},#{interviewee},NULL,NULL,#{interview_start_date},#{interview_end_date},'H',#{work_no})
 	</insert>
 	
+	<update id="updateInterview" parameterType="Interview">
+		UPDATE INTERVIEW SET INTERVIEW_QUESTION = #{interview_question}, INTERVIEW_START_DATE = #{interview_start_date},
+		INTERVIEW_END_DATE = #{interview_end_date}, INTERVIEW_STATUS = #{interview_status}
+		WHERE INTERVIEW_NO = #{interview_no}
+	</update>
+	
 	<delete id="deleteInterview" parameterType="string">
 		DELETE FROM INTERVIEW WHERE INTERVIEW_NO = #{interview_no}
 	</delete>
 	
-	<update id="updateInterview" parameterType="string">
-		UPDATE INTERVIEW SET INTERVIEW_QUESTION = #{interview_question}, INTERVIEW_START_DATE = #{interview_start_date},INTERVIEW_END_DATE = #{interview_end_date}, INTERVIEW_STATUS = #{interview_status}
-	</update>
-
 </mapper>

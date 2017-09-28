@@ -63,7 +63,10 @@
       <tr>
         <th>인터뷰 번호</th>
         <th>회사 이름</th>
+        
+        <c:if test="${member.member_type_code eq 'C' }">
         <th>신청자 아이디</th>
+        </c:if>
         <th>면접 상태</th>
         <th></th>
       </tr>
@@ -75,7 +78,9 @@
       <tr>
         <td>${interviewlist.interview_no }</td>
         <td>${interviewlist.company_name}</td>
-        <td>${interviewlist.interviewee}</td>
+        <c:if test="${member.member_type_code eq 'C' }">
+        <td><a>${interviewlist.interviewee}</a></td>
+        </c:if>
         <td>
         <c:url var="interDetail" value="/interviewDetail.do">
         	<c:param name="interview_no" value="${interviewlist.interview_no}"/>

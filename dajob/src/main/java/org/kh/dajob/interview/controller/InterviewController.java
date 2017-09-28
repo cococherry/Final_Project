@@ -73,38 +73,47 @@ public class InterviewController {
 		return model;
 	}
 	
-	@RequestMapping(value="interviewUpd.do")
-	public ModelAndView interviewUpd(ModelAndView model){
-		/*String content = request.getParameter("content");
-		String status = request.getParameter("status");
+	@RequestMapping(value = "interviewUpdate.do")
+	public ModelAndView interviewUpdate(@RequestParam("interview_no") String interview_no, HttpServletRequest request,
+			ModelAndView mv) throws IOException, ParseException {
+		request.setCharacterEncoding("UTF-8");
+		
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-		java.util.Date date = df.parse(request.getParameter("start"));
-		Timestamp startT = new Timestamp(date.getTime());
-		System.out.println("start Time : "+startT);
-		date = df.parse(request.getParameter("end"));
-		Timestamp endT = new Timestamp(date.getTime());
-		System.out.println("end Time : "+endT);
-		System.out.println(startT);
-		System.out.println(endT);
-		System.out.println(content);
-		System.out.println(status);
-		
-		int result = interviewService.updateInterview(new Interview(content,startT,endT,status));
-		
-		if(result > 0) {
-			model.setViewName("redirect:interviewList.do");
+		java.util.Date date = null;
+		Timestamp startT = null;
+		Timestamp endT = null;
+		Interview i = interviewService.selectInterview(interview_no);
+		if(request.getParameter("start") != null && request.getParameter("start") != "") {
+			date = df.parse(request.getParameter("start")); 
+			startT = new Timestamp(date.getTime());
+			System.out.println("start Time : "+startT);
 		} else {
-			model.addObject("msg", "공지사항 등록 실패!");
-			model.setViewName("404-page");
+			startT = i.getInterview_start_date();
+		} if(request.getParameter("end") != null && request.getParameter("end") != "") {
+			date = df.parse(request.getParameter("end"));
+			endT = new Timestamp(date.getTime());
+			System.out.println("end Time : "+endT);
+		} else {
+			endT = i.getInterview_end_date();
 		}
-		*/
-		model.setViewName("redirect:index.do");
-		return model;
+		i.setInterview_question(request.getParameter("interview_question"));
+		i.setInterview_status(request.getParameter("interview_status"));
+		i.setInterview_start_date(startT);
+		i.setInterview_end_date(endT);
+		
+		int result = interviewService.updateInterview(i);
+		if(result > 0) {
+			mv.setViewName("redirect:interviewList.do");
+		} else {
+			mv.addObject("msg", "인터뷰 데이터 수정 에러!!!");
+			mv.setViewName("404-page");
+		}
+		return mv;
 	}
 	
 	@RequestMapping(value = "interviewUpdateView.do")
 	public String interviewUpdateView(HttpSession session,HttpServletRequest request, Model model) throws IOException {
-		
+
 		model.addAttribute("interview", interviewService.selectInterview(request.getParameter("interview_no")));
 		Timestamp startdate = interviewService.selectInterview(request.getParameter("interview_no")).getInterview_start_date();
 		Timestamp enddate = interviewService.selectInterview(request.getParameter("interview_no")).getInterview_end_date();
@@ -126,7 +135,7 @@ public class InterviewController {
 	public ModelAndView interviewInsert(Interview i, ModelAndView model, HttpServletRequest request) throws ParseException{
 		
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-		java.util.Date date = df.parse(request.getParameter("start"));
+		java.util.Date date = df.parse(request.getParameter("start")); 
 		Timestamp startT = new Timestamp(date.getTime());
 		System.out.println("start Time : "+startT);
 		
@@ -141,11 +150,10 @@ public class InterviewController {
 		if(result > 0) {
 			model.setViewName("redirect:interviewList.do");
 		} else {
-			model.addObject("msg", "공지사항 등록 실패!");
+			model.addObject("msg", "인터뷰 등록 실패!");
 			model.setViewName("404-page");
 		}
 		
-	
 		return model;
 	}
 }

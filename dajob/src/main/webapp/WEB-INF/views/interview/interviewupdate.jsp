@@ -69,23 +69,21 @@
 	<div>
 		<div class="panel panel-default">
 			<div class="panel-body article">
-				<form method="post" action="interviewUpd.do">
+				<form method="post" action="interviewUpdate.do">
 					<h4>화상채팅방 수정하기</h4>
+					<input type="hidden" name="interview_no" value="${interview.interview_no}">
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<div class="row">
 								<div class="col-md-2 mb-2">
-									<label>면접자 아이디</label> <input type="text"
-										class="form-control is-valid" id="validationServer02"
-										placeholder="Last name" value="${interview.interviewee }"
-										readonly>
+									<label>면접자 아이디</label> 
+									<input type="text" class="form-control is-valid" id="validationServer02" placeholder="Last name" value="${interview.interviewee}" readonly>
 								</div>
 								<div class="col-md-2 mb-2">
-									<label>면접 상태</label> <input type="hidden" id="status"
-										name="status" value=""> <select
-										class="form-control is-valid"
-										autofocus="${interview.interview_status }" id="IVstatus"
-										name="IVstatus">
+									<label>면접 상태</label>
+									<input type="hidden" id="interview_status" name="interview_status" value=""> 
+									<select class="form-control is-valid"  id="IVstatus" name="IVstatus">
+										<option value="">상태변경</option>
 										<option value="H">대기</option>
 										<option value="E">입장가능</option>
 										<option value="Q">종료</option>
@@ -95,40 +93,32 @@
 									<label for="dtp_input1" class="control-label">시작 시간</label>
 									<fmt:formatDate var="today" value="${now}" type="both"
 										pattern="yyyy-MM-ddTHH:mm:ssZ" />
-									<c:set var="toDay" value="${today}" />
-									<div class="input-group date form_datetime1"
-										data-date="${toDay}" data-date-format="yyyy년 MM dd일  p HH:ii"
-										data-link-field="dtp_input1">
-										<input class="form-control" size="16" type="text" name="dateFormat1" value="${startdate}" readonly> <span
-											class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span> <span
-											class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span> <input type="hidden" id="start" name="start" value="" readonly />
-
+									<c:set var="toDay" value="${today}"/>
+									<div class="input-group date form_datetime1" data-date="${toDay}" data-date-format="yyyy년 MM dd일  p HH:ii" data-link-field="dtp_input1">
+										<input class="form-control" size="16" type="text" name="dateFormat1" value="${startdate}" readonly> 
+										<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span> 
+										<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span> 
+										<input type="hidden" id="start" name="start" value="${interview.interview_start_date}" readonly />
 									</div>
 								</div>
 
 								<div class="form-group col-md-4 mb-4">
-									<label class="control-label">끝나는 시간</label> <label
-										for="dtp_input1" class="control-label">끝나는 시간</label>
-									<div class="input-group date form_datetime2"
-										data-date="${toDay}" data-date-format="yyyy년 MM dd일  p HH:ii"
-										data-link-field="dtp_input1">
+									<label for="dtp_input1" class="control-label">끝나는 시간</label>
+									<div class="input-group date form_datetime2" data-date="${toDay}" data-date-format="yyyy년 MM dd일  p HH:ii" data-link-field="dtp_input1">
 										<input class="form-control" size="16" type="text" name="dateFormat2" value="${enddate}" readonly>
 										<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span> 
 										<span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span> 
-										<input type="hidden" id="end" name="end" value="" readonly />
+										<input type="hidden" id="end" name="end" value="${interview.interview_end_date}" readonly />
 									</div>
 								</div>
-
 							</div>
 						</div>
-						<textarea cols="100" id="editor1" rows="10" name="content">${interview.interview_question}</textarea>
+						<textarea cols="100" id="editor" rows="10" name="interview_question">${interview.interview_question}</textarea>
 					</div>
 					<ul class="pager">
-						<li><input type="submit" class="btn btn-default" value="수정하기">
-						</li>
+						<li><input type="submit" class="btn btn-default" value="수정하기"></li>
 						<li>
-							<button type="button" class="btn btn-default"
-								onclick="javascript:history.go(-1);">취소하기</button>
+							<button type="button" class="btn btn-default" onclick="javascript:history.go(-1);">취소하기</button>
 						</li>
 					</ul>
 				</form>
@@ -148,7 +138,7 @@
 		src="${pageContext.request.contextPath}/resources/api/CKeditor/config.js"></script>
 	<script>
 			CKEDITOR.config.customConfig = '${pageContext.request.contextPath}/resources/api/CKeditor/config.js';
-			CKEDITOR.replace( 'editor1', {
+			CKEDITOR.replace( 'editor', {
 				filebrowserImageUploadUrl: '${pageContext.request.contextPath}/resources/up',
 				height: 400
 			});
@@ -160,8 +150,8 @@
 	<script
 		src="<c:url value='/resources/js/calender/bootstrap-datetimepicker.ko.js'/>"></script>
 	<script type="text/javascript">
-	$('#IVstatus').on('change'),function(){
-		$('#status').val($('#IVstatus option:selected').val());
+	$('#IVstatus').on('change',function(){
+		$('#interview_status').val($('#IVstatus option:selected').val());
 	});
 	$('.form_datetime1').datetimepicker({
         language:  'ko',

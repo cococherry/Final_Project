@@ -89,12 +89,8 @@
                               </div>
                         </div>
                         <ul class="pager">
-                            <li>
-                                <input type="submit" class="btn btn-default" value="신청하기">
-                            </li>
-                            <li>
-                               <button type="button" class="btn btn-default" onclick="javascript:history.go(-1);">취소하기</button>
-                            </li>
+                            <li><input type="submit" class="btn btn-default" value="신청하기"></li>
+                            <li><button type="button" class="btn btn-default" onclick="javascript:history.go(-1);">취소하기</button></li>
                         </ul>
                     </div>
                     </form>
@@ -114,8 +110,8 @@
         weekStart: 1,
         todayBtn:  1,
 		autoclose: 1,
-		startDate: new Date(),
 		todayHighlight: 1,
+		startDate: new Date(),
 		startView: 2,
 		forceParse: 0,
         showMeridian: 1,
@@ -127,8 +123,8 @@
         weekStart: 1,
         todayBtn:  1,
 		autoclose: 1,
-		startDate: new Date(),
 		todayHighlight: 1,
+		startDate: new Date(),
 		startView: 2,
 		forceParse: 0,
         showMeridian: 1,
