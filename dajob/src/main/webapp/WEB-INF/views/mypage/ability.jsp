@@ -59,122 +59,93 @@
 			
 				<div class="row sub_content">
 					<div class="who">
-<!-- 					<div class="col-lg-8 col-md-8 col-sm-8">
+						<div class="col-lg-6 col-sm-6">
 							<div class="dividerHeading">
-								<h4><span>Who we are?</span></h4>
+								<h4><span>보유 자격증 개수 : 
+								<c:if test="${ empty countCert }">
+			                   	 0개
+			                    </c:if>
+			                    <c:forEach items="${countCert}"  var="countCert" varStatus="vs">
+				                    <c:if test="${ countCert.cert_value eq '총합' }">
+				                    	${ countCert.cert_count }개
+				                    </c:if>
+			                    </c:forEach>
+								</span></h4>
 							</div>
-								<img class="left_img img-thumbnail" src="images/about_1.png" alt="about img">
-                            <p>Veos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum. </p>
-							<p>Donec rutrum erat non arcu gravida porttitor. Nunc et magna nisi. Lore aliquam at erat in lorem purus aliquet mollis. Fusce elementum velit vel dolor iaculis egestas. Maecenas ut nulla quis eros scelerisque posuere vel vitae nibh eros scelerisque. </p>
-							<p>Fusce lacinia tempor malesuada. Ut lacus sapien, placerat a ornare nec, elementum sit amet felis. Maecenas pretium lorem hendrerit eros sagittis fermentum. Donec in ut odio libero, at vulputate urna. Nulla tristique mi a massa convallis cursus. Nulla eu mi magna. Etiam suscipit commodo ad gravida. Cras suscipit, quam vitae adipiscing faucibus, risus nibh laoreet odio, a porttitor metus.</p>
-							
-						</div> -->
-						
-						<div class="col-lg-12 col-md-12 col-sm-12">
-							<div class="dividerHeading">
-								<h4><span>보유 자격증 개수 : ○개</span></h4>
-							</div>
-							<p>자신이 사용가능한 기술에 대한 지표를 나타내주는 그래프입니다. 이를 통해 자신의 능력을 확인하세요! </p>
+							<p>자신이 사용가능한 기술에 대한 지표를 나타내주는 그래프입니다, 자신의 능력을 확인하세요! </p>
 							<ul class="progress-skill-bar">
 								<li>
-									<span class="lable">HTML</span>
+									<c:forEach items="${countCert}"  var="countCert" varStatus="vs">
+				                		<c:if test="${ countCert.cert_value eq '공통' }">
+											<span class="lable">${ countCert.cert_count }개</span>
+										</c:if>
+									</c:forEach>
 									<div class="progress_skill">
-										<div class="bar" data-value="10" role="progressbar" data-height="100">
-											HTML
-										</div>
+									<c:forEach items="${countCert}"  var="countCert" varStatus="vs">
+				                		<c:if test="${ countCert.cert_value eq '공통' }">
+											<div class="bar" data-value="${ countCert.cert_count * 17 }" role="progressbar" data-height="100">
+												공통
+											</div>
+										</c:if>
+									</c:forEach>
+									</div>
+								</li>
+								
+								<li>									
+									<c:forEach items="${countCert}"  var="countCert" varStatus="vs">
+				                		<c:if test="${ countCert.cert_value eq 'JAVA' }">
+											<span class="lable">${ countCert.cert_count }개</span>
+										</c:if>
+									</c:forEach>
+									<div class="progress_skill">
+									<c:forEach items="${countCert}"  var="countCert" varStatus="vs">
+				                		<c:if test="${ countCert.cert_value eq 'JAVA' }">
+											<div class="bar" data-value="${ countCert.cert_count * 33 }" role="progressbar" data-height="100">
+												JAVA
+											</div>
+										</c:if>
+									</c:forEach>
 									</div>
 								</li>
 								<li>
-									<span class="lable">CSS</span>
+									<c:forEach items="${countCert}"  var="countCert" varStatus="vs">
+				                		<c:if test="${ countCert.cert_value eq 'DB' }">
+											<span class="lable">${ countCert.cert_count }개</span>
+										</c:if>
+									</c:forEach>
 									<div class="progress_skill">
-										<div class="bar" data-value="20" role="progressbar" data-height="100">
-											CSS
-										</div>
-									</div>
-								</li>
-								<li>
-									<span class="lable">JavaScript</span>
-									<div class="progress_skill">
-										<div class="bar" data-value="30" role="progressbar" data-height="100">
-											JavaScript
-										</div>
-									</div>
-								</li>
-								<li>
-									<span class="lable">MySQL</span>
-									<div class="progress_skill">
-										<div class="bar" data-value="50" role="progressbar" data-height="100">
-											MySQL
-										</div>
-									</div>
-								</li>
-								<li>
-									<span class="lable">PHP</span>
-									<div class="progress_skill">
-										<div class="bar" data-value="40" role="progressbar" data-height="100">
-											PHP
-										</div>
+									<c:forEach items="${countCert}"  var="countCert" varStatus="vs">
+			                			<c:if test="${ countCert.cert_value eq 'DB' }">
+											<div class="bar" data-value="${ countCert.cert_count * 17 }" role="progressbar" data-height="100">
+												DB
+											</div>
+										</c:if>
+									</c:forEach>
 									</div>
 								</li>
 							</ul>
 						</div>
 					</div>
-				</div>
-				
-
-                <div class="row sub_content">
-                    <div class="col-lg-12 col-md-12 col-sm-12">
-                        <div class="promo_box">
+					<div class="col-lg-6 col-sm-6">
+                        <div class="promo_box" style="margin-top:10%">
                             <div class="col-sm-9">
                                 <div class="promo_content">
-                                    <h3>취득 자격증 기준 ○○○님의 전문 능력은 ○○○입니다.</h3>
-                                    <p>자신의 능력 분석을 통해, 지금 바로 이력서를 작성해 보세요!</p>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="pb_action">
-                                    <a href="#fakelink" class="btn btn-default btn-lg">
-                                        <i class="fa fa-pencil-square-o"></i>
-                                        	이력서 작성
+                                    <h3 style="width: 140%;">취득 자격증 기준 <b style="color:#03adde">${ user.member_name }</b>님의 전문 능력은
+                                     	<c:forEach items="${countCert}"  var="countCert" varStatus="vs">
+                                     		<c:if test="${ vs.index eq 1 }">
+                                     			<b style="color:#03adde">${ countCert.cert_value }</b>분야입니다.
+                                     		</c:if>
+                                     	</c:forEach>
+                                     </h3>
+                                    <p>자신의 능력 분석을 통해, 지금 바로 이력서를 작성해 보세요!</p><br>
+                                    <a href="resumeUpdate.do" class="btn btn-default btn-md">
+                                       	이력서 작성하기
                                     </a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="row  sub_content">
-                    <div class="col-lg-12 col-md-12 col-sm-12">
-                        <div class="dividerHeading">
-                            <h4><span>관련 자격증 추천</span></h4>
-                            <!-- <p>능력분석을 통해 자신에게 필요한 자격증을 추천합니다.</p> -->
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-3 col-sm-6">
-                        <div class="team_prof">
-                            <h3 class="names">정보처리기사<small>관련직업명</small></h3>
-                            <p class="description">정보처리기사는 컴퓨터 언어를 이용해 프로그램을 제작할 뿐만 아니라 컴퓨터 조직을 효과적으로 이용하기 위해 업무를 분석·설계하고 자료처리나 계산 순서를 작성·운용하는 일을 한다.</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-3 col-sm-6">
-                        <div class="team_prof">
-                            <h3 class="names">정보처리기사<small>관련직업명</small></h3>
-                            <p class="description">정보처리기사는 컴퓨터 언어를 이용해 프로그램을 제작할 뿐만 아니라 컴퓨터 조직을 효과적으로 이용하기 위해 업무를 분석·설계하고 자료처리나 계산 순서를 작성·운용하는 일을 한다.</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-3 col-sm-6">
-                        <div class="team_prof">
-                            <h3 class="names">SQLD<small>관련직업명</small></h3>
-                            <p class="description">SQL은 데이터베이스를 직접적으로 액세스할 수 있는 언어로, 데이터를 정의하고, 조작하며, 조작한 결과를 적용하거나 취소할 수 있고, 접근권한을 제어하는 처리들로 구성된다.</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-3 col-sm-6">
-                        <div class="team_prof">
-                            <h3 class="names">SQLD<small>관련직업명</small></h3>
-                            <p class="description">SQL은 데이터베이스를 직접적으로 액세스할 수 있는 언어로, 데이터를 정의하고, 조작하며, 조작한 결과를 적용하거나 취소할 수 있고, 접근권한을 제어하는 처리들로 구성된다.</p>
-                        </div>
-                    </div>
-                </div>
+				</div>
                 
                 <div class="row sub_content">
                     <div class="col-lg-12 col-md-12 col-sm-12">
@@ -182,40 +153,73 @@
                             <h4><span>연봉 측정</span></h4>
                             <p>능력분석을통해서 자신과 비슷한 사람의 연봉을 비교해보세요!</p><br>
                         </div>
+                        <div id="col-lg-12 col-sm-12">
+		            		<c:forEach items="${countCert}"  var="countCert" varStatus="vs">
+			          		 <c:if test="${ countCert.cert_value eq '총합'}">
+			              		 	<h2 style="margin:0; padding:0;">
+			              		 	<c:set var="length" value="${ countCert.cert_count * 6.6}"/>
+			              		 		<span style="padding-left:${length}%;"><i class="fa fa-caret-down" style="color:red; font-size:20pt;"></i></span>
+			              		 	</h2>
+			          		 </c:if>
+		            		</c:forEach>
+			            </div>
                         <div class="progress">
 						  <div class="progress-bar progress-bar-success progress-bar-striped active" style="width: 25%">
 						  	하위연봉
-						    <span class="sr-only">35% Complete (success)</span>
+						    <span class="sr-only">25% Complete (success)</span>
 						  </div>
 						  <div class="progress-bar progress-bar-warning progress-bar-striped active" style="width: 50%">
 						  	평균연봉
-						    <span class="sr-only">20% Complete (warning)</span>
+						    <span class="sr-only">50% Complete (warning)</span>
 						  </div>
 						  <div class="progress-bar progress-bar-danger progress-bar-striped active" style="width: 25%">
 						  	상위연봉
-						    <span class="sr-only">10% Complete (danger)</span>
+						    <span class="sr-only">25% Complete (danger)</span>
 						  </div>
 						</div>
-						<div class="col-lg-4 col-sm-4">
-	                        <div class="alert alert-success alert-dismissable">
-		                        <center><strong>하위연봉</strong> 2400이하</center>
-		                    </div>
-	                    </div>
-						<div class="col-lg-4 col-sm-4">
-		                    <div class="alert alert-warning alert-dismissable">
-		                        <center><strong>평균연봉</strong> 2400~2800</center>
-		                    </div>
-	                    </div>
-						<div class="col-lg-4 col-sm-4">
-		                    <div class="alert alert-danger alert-dismissable">
-		                        <center><strong>상위연봉 </strong> 2800이상</center>
-		                    </div>
-	                    </div>
-
-	                    <div class="col-lg-4 col-sm-4"><h2 style="text-align:center; margin:0; padding:0">현재 내위치</h2></div>
-	                    
+						
+			            <div id="col-lg-12 col-sm-12">
+		            		<c:forEach items="${countCert}" var="countCert" varStatus="vs">
+			          		 <c:if test="${ countCert.cert_value eq '총합'}">
+			              		 <blockquote class="default">
+		              		 		<h2 style="margin:0; padding:0;">
+			              		 		<p align="center"><i class="fa fa-street-view" style="color:black;"></i>&nbsp;&nbsp;현재 내 위치</p>
+		              		 		</h2>
+			              		 	<p align="center">
+				              		 		<c:if test="${ countCert.cert_count <= 3 }">
+				              		 			<br> 현재 당신의 위치는 <b style="color:green;">하위연봉</b>입니다. 연관 자격증을 더 취득하시면 좋을 것 같습니다.
+				              		 		</c:if><c:if test="${ countCert.cert_count > 3 and  countCert.cert_count < 11 }">
+				              		 			<br> 현재 당신의 위치는 <b style="color:orange;">평균연봉</b>입니다. 연관 자격증을 더 취득하시면 좋을 것 같습니다.
+				              		 		</c:if><c:if test="${ countCert.cert_count > 11 }">
+				              		 			<br> 현재 당신의 위치는 <b style="color:red;">상위연봉</b>입니다. 이력서를 통해 취업에 도전하세요.
+				              		 		</c:if>
+			              		 	</p>
+			              		 </blockquote>
+			          		 </c:if>
+		            		</c:forEach>
+			            </div>
                    	</div>
-                </div> <!--./row-->  
+                </div>  
+                
+                                <div class="row  sub_content">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="dividerHeading">
+                            <h4><span>관련 자격증 추천</span></h4>
+                            <!-- <p>능력분석을 통해 자신에게 필요한 자격증을 추천합니다.</p> -->
+                        </div>
+                    </div>
+                   	<c:forEach items="${ recommendCert }" var="recommendCert" varStatus="vs">
+                   		<c:if test="${ vs.index <= 3 }">
+	                    	<div class="col-lg-3 col-md-3 col-sm-6">
+		                        <div class="team_prof">
+		                            <h3 class="names">${ recommendCert.cert_name }<small>${ recommendCert.cert_type }</small></h3>
+		                            <p class="description">${ recommendCert.cert_value }</p>
+		                        </div>
+		                    </div>
+	                    </c:if>
+                   	</c:forEach>
+                </div> <!--./row-->
+                
 			</div>
 		</section>
 	</section>

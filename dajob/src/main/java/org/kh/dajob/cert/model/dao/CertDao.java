@@ -40,4 +40,8 @@ public class CertDao {
 	public int deleteUserCert(String member_id) {
 		return sqlSession.delete("Cert.deleteUserCert", member_id);
 	}
+	
+	public ArrayList<TotalCert> recommendCert(String userid){
+		return new ArrayList<TotalCert>(sqlSession.selectList("Cert.recommendCert", userid));
+	}
 }

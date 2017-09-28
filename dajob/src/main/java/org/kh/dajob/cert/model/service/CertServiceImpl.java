@@ -51,5 +51,11 @@ public class CertServiceImpl implements CertService {
 	public int deleteUserCert(String member_id) {
 		return certDao.deleteUserCert(member_id);
 	}
+
+	@Override
+	public ArrayList<TotalCert> recommendCert(Member m) {
+		String userid = m.getMember_id();
+		return certDao.recommendCert(userid);
+	}
 	
 }

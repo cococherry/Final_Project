@@ -7,19 +7,22 @@ public class Cert implements java.io.Serializable {
 	private String cert_no;
 	private String cert_name;
 	private String cert_type;
+	private String cert_value;
 	
 	public Cert() {}
 
-	public Cert(String cert_no, String cert_name, String cert_type) {
+	public Cert(String cert_no, String cert_name, String cert_type, String cert_value) {
 		super();
 		this.cert_no = cert_no;
 		this.cert_name = cert_name;
 		this.cert_type = cert_type;
+		this.cert_value = cert_value;
 	}
 
 	@Override
 	public String toString() {
-		return "Cert [cert_no=" + cert_no + ", cert_name=" + cert_name + ", cert_type=" + cert_type + "]";
+		return "Cert [cert_no=" + cert_no + ", cert_name=" + cert_name + ", cert_type=" + cert_type + ", cert_value="
+				+ cert_value + "]";
 	}
 
 	public String getCert_no() {
@@ -44,6 +47,18 @@ public class Cert implements java.io.Serializable {
 
 	public void setCert_type(String cert_type) {
 		this.cert_type = cert_type;
+	}
+
+	public String getCert_value() {
+		return cert_value;
+	}
+
+	public void setCert_value(String cert_value) {
+		this.cert_value = cert_value;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 	
 }

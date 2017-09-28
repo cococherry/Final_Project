@@ -11,22 +11,25 @@ public class TotalCert implements java.io.Serializable {
 	private String cert_type;
 	private String member_id;
 	private Date cert_date;
+	private String cert_value;
 	
 	public TotalCert() {}
 
-	public TotalCert(String cert_no, String cert_name, String cert_type, String member_id, Date cert_date) {
+	public TotalCert(String cert_no, String cert_name, String cert_type, String member_id, Date cert_date,
+			String cert_value) {
 		super();
 		this.cert_no = cert_no;
 		this.cert_name = cert_name;
 		this.cert_type = cert_type;
 		this.member_id = member_id;
 		this.cert_date = cert_date;
+		this.cert_value = cert_value;
 	}
 
 	@Override
 	public String toString() {
 		return "TotalCert [cert_no=" + cert_no + ", cert_name=" + cert_name + ", cert_type=" + cert_type
-				+ ", member_id=" + member_id + ", cert_date=" + cert_date + "]";
+				+ ", member_id=" + member_id + ", cert_date=" + cert_date + ", cert_value=" + cert_value + "]";
 	}
 
 	public String getCert_no() {
@@ -67,6 +70,18 @@ public class TotalCert implements java.io.Serializable {
 
 	public void setCert_date(Date cert_date) {
 		this.cert_date = cert_date;
+	}
+
+	public String getCert_value() {
+		return cert_value;
+	}
+
+	public void setCert_value(String cert_value) {
+		this.cert_value = cert_value;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 	
 }

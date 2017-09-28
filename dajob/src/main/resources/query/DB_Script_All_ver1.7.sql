@@ -146,7 +146,8 @@ COMMENT ON COLUMN MEMBER_COMPANY.COMPANY_DATE IS '창립연도';
 CREATE TABLE CERT(
        CERT_NO VARCHAR2(14) CONSTRAINT PK_CERT PRIMARY KEY,  /* 자격증구분코드 */
        CERT_NAME VARCHAR2(45),  /* 자격증명 */
-       CERT_TYPE VARCHAR2(30)  /* 자격증분류 */
+       CERT_TYPE VARCHAR2(30),  /* 자격증분류 */
+       CERT_VALUE VARCHAR2(3000)  /* 자격증설명 */
 );
 
 COMMENT ON TABLE CERT IS '자격증';
@@ -584,21 +585,21 @@ VALUES('comp33','T4','IT 유니언즈',250,150,'402-02-00001','02-0003-0001',
 --SELECT * FROM POWERLINK;
 --UPDATE POWERLINK SET POWERLINK_CNT = POWERLINK_CNT + 1, POWERLINK_TIME = 120;
 
-INSERT INTO CERT VALUES('CE170101010000','OCJP','JAVA');
-INSERT INTO CERT VALUES('CE170101010001','OCWCD','JAVA');
-INSERT INTO CERT VALUES('CE170101010002','OCBCD','JAVA');
-INSERT INTO CERT VALUES('CE170101010003','SQLD','DB');
-INSERT INTO CERT VALUES('CE170101010004','SQLP','DB');
-INSERT INTO CERT VALUES('CE170101010005','DAsP','DB');
-INSERT INTO CERT VALUES('CE170101010006','DAP','DB');
-INSERT INTO CERT VALUES('CE170101010007','ADsP','DB');
-INSERT INTO CERT VALUES('CE170101010008','ADP','DB');
-INSERT INTO CERT VALUES('CE170101010009','사무자동화기사','공통');
-INSERT INTO CERT VALUES('CE170101010010','정보처리기사','공통');
-INSERT INTO CERT VALUES('CE170101010011','정보처리산업기사','공통');
-INSERT INTO CERT VALUES('CE170101010012','컴퓨터활용1급','공통');
-INSERT INTO CERT VALUES('CE170101010013','리눅스마스터1급','공통');
-INSERT INTO CERT VALUES('CE170101010014','MOS','공통');
+INSERT INTO CERT VALUES('CE170101010000','OCJP','JAVA','자바 프로그래밍 언어 활용 능력을 검증하는 자격증. 자바 기술을 직접 개발한 선 마이크로시스템즈에서 자바에 관련된 지식을 검증해 주는 시험이다. OCJP는 자바 자격증 중 기초입문 단계에 해당된다.');
+INSERT INTO CERT VALUES('CE170101010001','OCWCD','JAVA','Java Technology servlet 과 JSP (Java Server Page), APIs(Application Program Interface) 웹 어플리케이션을 사용하는 Java2 Plarform 개발자들의 능력을 검증하기 위한 자격증이다. 이자격에 응시 하기 위해서는 반드시 오라클 공인 프로그래머 자격(OCJP)을 취득한 상태여야 한다');
+INSERT INTO CERT VALUES('CE170101010002','OCBCD','JAVA','자격증은 EJB(Enterprise JavaBeans) 어플리케이션을 설계, 개발, 테스트, 구현 및 통합하는 업무를 담당하는 프로그래머나 개발자들을 위한 자격증 시험이다. 또한, J2EE 플랫폼 (Java 2 Platform, Enterprise Edition) 기술을 도입하여 어플리케이션의 비즈니스 로직을 캡슐화하는 서버 사이드 컴포넌트를 개발하는 전문성을 가진 개발자들을 위한 자격증 시험이다.');
+INSERT INTO CERT VALUES('CE170101010003','SQLD','DB','SQL은 데이터베이스를 직접적으로 액세스할 수 있는 언어로, 데이터를 정의하고, 조작하며, 조작한 결과를 적용하거나 취소할 수 있고, 접근권한을 제어하는 처리들로 구성된다.');
+INSERT INTO CERT VALUES('CE170101010004','SQLP','DB','SQL은 데이터베이스를 직접적으로 액세스할 수 있는 언어로, 데이터를 정의하고, 조작하며, 조작한 결과를 적용하거나 취소할 수 있고, 접근권한을 제어하는 처리들로 구성된다.');
+INSERT INTO CERT VALUES('CE170101010005','DAsP','DB','데이터아키텍처 준전문가(DAsP, Data Architecture Semi-Professional)란 효과적인 데이터아키텍처 구축을 위해 데이터 요건 분석, 데이터 표준화, 데이터 모델링, 데이터베이스 설계와 이용 등의 직무를 수행하는 실무자를 말한다.');
+INSERT INTO CERT VALUES('CE170101010006','DAP','DB','데이터아키텍처 전문가(DAP, Data Architecture Professional)란 효과적인 데이터아키텍처 구축을 위해 전사아키텍처와 데이터품질관리에 대한 지식을 바탕으로 데이터 요건분석, 데이터 표준화, 데이터 모델링, 데이터베이스 설계와 이용 등의 직무를 수행하는 실무자를 말한다.');
+INSERT INTO CERT VALUES('CE170101010007','ADsP','DB','데이터 분석 준전문가(ADsP : Advanced Data Analytics Semi-Professional)란 데이터 이해에 대한 기본지식을 바탕으로 데이터 분석 기획 및 데이터 분석 등의 직무를 수행하는 실무자를 말한다.');
+INSERT INTO CERT VALUES('CE170101010008','ADP','DB','데이터 분석 전문가란 데이터 이해 및 처리 기술에 대한 기본지식을 바탕으로 데이터 분석 기획, 데이터 분석, 데이터 시각화 업무를 수행하고 이를 통해 프로세스 혁신 및 마케팅 전략 결정 등의 과학적 의사결정을 지원하는 직무를 수행하는 전문가를 말한다.');
+INSERT INTO CERT VALUES('CE170101010009','사무자동화기사','공통','과학기술정보통신부 및 산업통상자원부 공동 소관, 한국산업인력공단에서 관리하는 정보기술분야 산업기사 자격증의 일종. 관련 학과는 모든 학과이므로, 대학교를 2년 이상 다니거나 동등한 학력을 갖춘 모든 사람이 응시 가능하다. 다른 산업기사 시험과 마찬가지로 1년에 세 차례 시행한다');
+INSERT INTO CERT VALUES('CE170101010010','정보처리기사','공통','정보처리기사는 컴퓨터 언어를 이용해 프로그램을 제작할 뿐만 아니라 컴퓨터 조직을 효과적으로 이용하기 위해 업무를 분석·설계하고 자료처리나 계산 순서를 작성·운용하는 일을 한다.');
+INSERT INTO CERT VALUES('CE170101010011','정보처리산업기사','공통','정보처리산업기사는 컴퓨터 언어를 이용해 프로그램을 제작할 뿐만 아니라 컴퓨터 조직을 효과적으로 이용하기 위해 업무를 분석·설계하고 자료처리나 계산 순서를 작성·운용하는 일을 한다.');
+INSERT INTO CERT VALUES('CE170101010012','컴퓨터활용1급','공통','대한상공회의소에서 주관하는 컴퓨터 관련 자격증 중 하나. 2016년 이전까지는 공무원 시험 가산점으로 인해 따던 자격증이었으나, 2017년부터 국가직 공무원에 한해 정보화 자격증 가산점이 폐지되어 응시인원이 다소 줄어들었다.');
+INSERT INTO CERT VALUES('CE170101010013','리눅스마스터1급','공통','리눅스 기반의 Desktop활용 및 Server운영 능력, 리눅스 시스템의 설계개발 및 관리 능력, 리눅스 기반의 네트워크 및 서버 구축/운영 능력을 검정하는 자격증이다. 생각보다 인지도가 꽤 있는 자격증으로 매년 응시수가 늘어나고 있다. 실제로 시험장에 가보면 워드나 컴활치는 사람만큼 숫자가 있어서 놀라게 된다.');
+INSERT INTO CERT VALUES('CE170101010014','MOS','공통','MOS (Microsoft Office Specialist) 마이크로소프트 오피스 프로그램에 대한 자격증으로 높은 수준의 오피스 활용능력이 있음을 증명 할 수 있다.');
 
 INSERT ALL
    INTO USER_CERT(MEMBER_ID, CERT_NO, CERT_DATE)

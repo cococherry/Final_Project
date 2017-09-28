@@ -21,5 +21,7 @@ public interface CertService {
 	int insertUserCert(Map<String, Object> map);
 	
 	int deleteUserCert(String member_id);
+
+	ArrayList<TotalCert> recommendCert(Member m);
 	
 }

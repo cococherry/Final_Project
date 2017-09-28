@@ -552,6 +552,10 @@ public class MemberController {
 			
 		if(user != null){
 			model.addAttribute("user", user);
+			model.addAttribute("totalCert", certService.totalCert((Member)session.getAttribute("member")));
+			model.addAttribute("countCert", certService.countCert((Member)session.getAttribute("member")));
+			model.addAttribute("likeList", workBoardService.likeList((Member)session.getAttribute("member")));
+			model.addAttribute("recommendCert", certService.recommendCert((Member)session.getAttribute("member")));
 		} else {
 				
 		}
