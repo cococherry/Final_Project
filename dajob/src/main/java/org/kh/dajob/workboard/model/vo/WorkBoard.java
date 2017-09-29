@@ -1,6 +1,7 @@
 package org.kh.dajob.workboard.model.vo;
 
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Timestamp;
 
 public class WorkBoard implements java.io.Serializable{
 	
@@ -15,16 +16,30 @@ public class WorkBoard implements java.io.Serializable{
 	private String work_skill;
 	private String work_career;
 	private String work_workplace;
-	private Date work_startdate;
-	private Date work_enddate;
+	private Timestamp work_startdate;
+	private Timestamp work_enddate;
+	private String member_id;
+	private String rnum;
+	private String company_name;
 	
-	public String getWork_workplace() {
-		return work_workplace;
-	}
-	public void setWork_workplace(String work_workplace) {
+	public WorkBoard(String work_title, String work_content, String work_writer, Date work_date, String work_job,
+			String work_skill, String work_career, String work_workplace, Timestamp work_startdate,
+			Timestamp work_enddate) {
+		super();
+		this.work_title = work_title;
+		this.work_content = work_content;
+		this.work_writer = work_writer;
+		this.work_date = work_date;
+		this.work_job = work_job;
+		this.work_skill = work_skill;
+		this.work_career = work_career;
 		this.work_workplace = work_workplace;
+		this.work_startdate = work_startdate;
+		this.work_enddate = work_enddate;
 	}
-  
+	public WorkBoard() {
+		// TODO Auto-generated constructor stub
+	}
 	public String getWork_no() {
 		return work_no;
 	}
@@ -73,16 +88,46 @@ public class WorkBoard implements java.io.Serializable{
 	public void setWork_career(String work_career) {
 		this.work_career = work_career;
 	}
-	public Date getWork_startdate() {
+	public String getWork_workplace() {
+		return work_workplace;
+	}
+	public void setWork_workplace(String work_workplace) {
+		this.work_workplace = work_workplace;
+	}
+	public Timestamp getWork_startdate() {
 		return work_startdate;
 	}
-	public void setWork_startdate(Date work_startdate) {
+	public void setWork_startdate(Timestamp work_startdate) {
 		this.work_startdate = work_startdate;
 	}
-	public Date getWork_enddate() {
+	public Timestamp getWork_enddate() {
 		return work_enddate;
 	}
-	public void setWork_enddate(Date work_enddate) {
+	public void setWork_enddate(Timestamp work_enddate) {
 		this.work_enddate = work_enddate;
 	}
+	public String getMember_id() {
+		return member_id;
+	}
+	public void setMember_id(String member_id) {
+		this.member_id = member_id;
+	}
+	public String getRnum() {
+		return rnum;
+	}
+	public void setRnum(String rnum) {
+		this.rnum = rnum;
+	}
+	public String getCompany_name() {
+		return company_name;
+	}
+	public void setCompany_name(String company_name) {
+		this.company_name = company_name;
+	}
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	
+	
+	
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="JobAndSkill">
+
+	<resultMap id="resultWorkJob" type="WorkJob">
+		<id property="job_code" column="JOB_CODE" />
+		<result property="job_name" column="JOB_NAME" />
+	</resultMap>
+	
+	<resultMap id="resultWorkSkill" type="WorkSkill">
+		<id property="skill_code" column="SKILL_CODE" />
+		<result property="skill_name" column="SKILL_NAME" />
+	</resultMap>
+	
+	<select id="selectJobList" resultType="arraylist" resultMap="resultWorkJob">
+		SELECT * FROM WORKJOB
+	</select>
+	
+	<select id="selectSkillList" resultType="arraylist" resultMap="resultWorkSkill">
+		SELECT * FROM SKILL
+	</select>
+	
+</mapper>

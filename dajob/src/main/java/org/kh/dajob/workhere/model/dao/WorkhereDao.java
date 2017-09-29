@@ -32,4 +32,12 @@ public class WorkhereDao {
 	public int deleteWorkhere(String no) {
 		return sqlSession.delete("Workhere.deleteWorkhere",no);
 	}
+
+	public int insertWorkhere(Workhere work) {
+		return sqlSession.insert("Workhere.insertWorkhere",work);
+	}
+
+	public int updateWorkhere(Workhere w) {
+		return sqlSession.update("Workhere.updateWorkhere",w);
+	}
 }

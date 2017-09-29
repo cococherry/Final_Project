@@ -21,6 +21,8 @@
 		<typeAlias type="org.kh.dajob.notice.model.vo.NoticeReply" alias="NoticeReply" />
 		<typeAlias type="org.kh.dajob.itinfo.model.vo.Itinfo" alias="Itinfo" />
 		<typeAlias type="org.kh.dajob.workhere.model.vo.Workhere" alias="Workhere" />
+		<typeAlias type="org.kh.dajob.workJobAndSkill.model.vo.WorkJob" alias="WorkJob" />
+		<typeAlias type="org.kh.dajob.workJobAndSkill.model.vo.WorkSkill" alias="WorkSkill" />
 	</typeAliases>
 	
 	<!-- <environments default="development">
@@ -46,5 +48,6 @@
 		<mapper resource="mappers/notice-mapper.xml" />
 		<mapper resource="mappers/itinfo-mapper.xml" />
 		<mapper resource="mappers/workhere-mapper.xml" />
+		<mapper resource="mappers/jobandskill-mapper.xml" />
 	</mappers>
 </configuration>

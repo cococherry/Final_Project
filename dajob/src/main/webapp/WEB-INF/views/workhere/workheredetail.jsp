@@ -80,7 +80,11 @@
                     <a class="btn btn-success" href="${interviewinsert}"><span class="glyphicon glyphicon-edit"></span>인터뷰 신청하기</a>
                 	</c:if>
                 	<c:if test="${member.member_id eq workhere.member_id }">
-                    <a class="btn btn-success" href="${wdel}"><span class="glyphicon glyphicon-edit"></span>삭제하기</a>
+                	<c:url var="workboardUpdateview" value="/workboardUpdateview.do">
+			        	<c:param name="workhere_no" value="${workhere.work_no}"/>
+			        </c:url>
+                    <a class="btn btn-danger" href="${wdel}"><span class="glyphicon glyphicon-edit"></span>삭제하기</a>
+                	<a class="btn btn-success" href="${workboardUpdateview}"><span class="glyphicon glyphicon-edit"></span>수정하기</a>
                 	</c:if>
                 </div><!-- Title end-->
 

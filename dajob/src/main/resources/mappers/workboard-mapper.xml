@@ -26,5 +26,8 @@
 	<select id="getListCount" resultType="int">
 		select count(*) from work_board where work_no in (select work_no from LIKELIST where member_id = #{memberId})
 	</select>
-
+	
+	<insert id="insertWorkboard" parameterType="Workboard">
+		INSERT INTO WORK_BOARD VALUES('WO'||TO_CHAR(SYSDATE,'RRMMDDHH24MI')||LPAD(SEQ_WORK.NEXTVAL,2,'0'),#{work_title},#{work_content},#{work_writer},#{work_date},#{work_job},#{work_skill},#{work_career},#{work_workplace},#{work_startdate},#{work_enddate})
+	</insert>
 </mapper>

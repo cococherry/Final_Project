@@ -2,6 +2,7 @@ package org.kh.dajob.workhere.model.vo;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class Workhere implements Serializable{
 
@@ -17,8 +18,8 @@ public class Workhere implements Serializable{
 	private String work_skill;
 	private String work_career;	
 	private String work_workplace;
-	private Date work_startdate;
-	private Date work_enddate;
+	private Timestamp work_startdate;
+	private Timestamp work_enddate;
 	//member_company
 	private String member_id;
 	private String company_name;
@@ -31,6 +32,19 @@ public class Workhere implements Serializable{
 	private String company_welfare;
 	private Date company_date;
 	
+	public Workhere( String work_title, String work_content, String work_job, String work_skill,
+			String work_career, String work_workplace, Timestamp work_startdate, Timestamp work_enddate,String work_no) {
+		super();
+		this.work_no = work_no;
+		this.work_title = work_title;
+		this.work_content = work_content;
+		this.work_job = work_job;
+		this.work_skill = work_skill;
+		this.work_career = work_career;
+		this.work_workplace = work_workplace;
+		this.work_startdate = work_startdate;
+		this.work_enddate = work_enddate;
+	}
 	public Workhere() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -89,16 +103,16 @@ public class Workhere implements Serializable{
 	public void setWork_workplace(String work_workplace) {
 		this.work_workplace = work_workplace;
 	}
-	public Date getWork_startdate() {
+	public Timestamp getWork_startdate() {
 		return work_startdate;
 	}
-	public void setWork_startdate(Date work_startdate) {
+	public void setWork_startdate(Timestamp work_startdate) {
 		this.work_startdate = work_startdate;
 	}
-	public Date getWork_enddate() {
+	public Timestamp getWork_enddate() {
 		return work_enddate;
 	}
-	public void setWork_enddate(Date work_enddate) {
+	public void setWork_enddate(Timestamp work_enddate) {
 		this.work_enddate = work_enddate;
 	}
 	public String getMember_id() {
@@ -163,8 +177,8 @@ public class Workhere implements Serializable{
 	}
 	
 	public Workhere(String work_no, String work_title, String work_content, String work_writer, Date work_date,
-			String work_job, String work_skill, String work_career, String work_workplace, Date work_startdate,
-			Date work_enddate, String member_id, String company_name, String company_type, int company_staff,
+			String work_job, String work_skill, String work_career, String work_workplace, Timestamp work_startdate,
+			Timestamp work_enddate, String member_id, String company_name, String company_type, int company_staff,
 			int company_capital, String company_code, String company_tel, String company_fax, String company_welfare,
 			Date company_date) {
 		super();

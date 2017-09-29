@@ -46,4 +46,12 @@
 	<delete id="deleteWorkhere" parameterType="string">
 		DELETE FROM VW_WORKHERE WHERE WORK_NO = #{work_no}
 	</delete>
+	
+	<update id="updateWorkhere" parameterType="Workhere">
+		UPDATE WORK_BOARD SET WORK_TITLE = #{work_title}, WORK_CONTENT = #{work_content},
+		WORK_JOB = #{work_job}, WORK_SKILL = #{work_skill}, WORK_CAREER = #{work_career},
+		WORK_WORKPLACE = #{work_workplace}, WORK_STARTDATE = #{work_startdate}, WORK_ENDDATE = #{work_enddate}
+		WHERE WORK_NO = #{work_no}
+	</update>
+	
 </mapper>

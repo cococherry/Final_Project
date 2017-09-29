@@ -58,7 +58,9 @@
                     <li><a href="#" id="workhere">Work Here</a>
                     	<ul class="dropdown-menu">
                             <li><a href="jobList.do">직업별 분류</a></li>
-                            <li><a href="skillList.do">능력별 분류</a></li>
+                            <c:if test="${member.member_type_code eq 'C' }">
+                            <li><a href="workboardInsertview.do">채용공고 등록하기</a></li>
+                            </c:if>
                         </ul>
                     </li>
                     <li><a href="#" id="mypage">마이페이지</a>
